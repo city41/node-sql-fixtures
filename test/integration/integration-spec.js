@@ -107,7 +107,8 @@ describe('fixtureGenerator', function() {
         }
       };
 
-      fixtureGenerator.create(dbConfig, dataConfig, function(results) {
+      fixtureGenerator.create(dbConfig, dataConfig, function(err, results) {
+        expect(err).to.be.undefined;
         expect(results.Users[0].username).to.eql('bob');
         done();
       });
