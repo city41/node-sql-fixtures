@@ -97,6 +97,33 @@ describe('fixtureGenerator', function() {
         });
       });
     });
+
+    describe("invoking raw sql", function() {
+      it("should invoke raw sql", function(done) {
+        var dataConfig = {
+          Users: [{
+            username: 'bob'
+          }, {
+            username: 'sally'
+          }],
+          sql: [
+            'insert into "Items" ("name", "userId") values (\'rawsql\', {Users:0})',
+            'insert into "Items" ("name", "userId") values (\'rawsql\', {Users:1})'
+          ]
+        };
+
+        var knex = this.knex;
+        fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+          expect(results.Users.length).to.eql(2);
+          expect(results.Items).to.be.undefined;
+          knex('Items').where('name', 'rawsql').then(function(knexResult) {
+            expect(knexResult[0].userId).to.eql(results.Users[0].id);
+            expect(knexResult[1].userId).to.eql(results.Users[1].id);
+            done();
+          });
+        });
+      });
+    });
   });
 
   describe('calling the callback', function() {
