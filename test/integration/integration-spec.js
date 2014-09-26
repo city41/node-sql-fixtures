@@ -36,7 +36,7 @@ describe('fixtureGenerator', function() {
     });
   });
 
-  it('should create a fixture with dependencies resolved via property strings', function(done) {
+  it('should create a fixture with dependencies resolved', function(done) {
     var dataConfig = {
       Users: {
         username: 'bob'
@@ -47,10 +47,16 @@ describe('fixtureGenerator', function() {
       }
     };
 
+    var knex = this.knex;
     fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
       expect(results.Users[0].username).to.eql('bob');
       expect(results.Items[0].userId).to.eql(results.Users[0].id);
-      done();
+
+      // verify the data made it into the database
+      knex('Users').where('id', results.Users[0].id).then(function(result) {
+        expect(result[0].username).to.eql('bob');
+        done();
+      });
     });
   });
 });
