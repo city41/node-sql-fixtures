@@ -1,0 +1,33 @@
+{
+  "name": "db-fixtures",
+  "version": "0.0.0",
+  "description": "Populate a SQL database with fixture data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "fixtures",
+    "sql",
+    "postgres.",
+    "sqlite",
+    "mysql",
+    "testing",
+    "dummy",
+    "data"
+  ],
+  "author": "Matt Greer <matt.e.greer@gmail.com> (http://www.mattgreer.org/)",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.3.2",
+    "knex": "^0.6.22",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-as-promised": "^4.1.1",
+    "gulp": "^3.8.8",
+    "gulp-mocha": "^1.1.0",
+    "mocha": "^1.21.4"
+  }
+}
