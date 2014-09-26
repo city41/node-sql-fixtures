@@ -28,6 +28,8 @@
     "chai-as-promised": "^4.1.1",
     "gulp": "^3.8.8",
     "gulp-mocha": "^1.1.0",
-    "mocha": "^1.21.4"
+    "gulp-shell": "^0.2.9",
+    "mocha": "^1.21.4",
+    "pg": "^3.4.4"
   }
 }
