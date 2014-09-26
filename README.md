@@ -6,6 +6,10 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 Internally sql-fixtures uses [Knex.js](http://knexjs.org/) and so it supports any database Knex.js does: sqlite, MySQL, MariaDB and PostgreSQL. However, so far only PostgreSQL has been tested directly. If you use this on other databases, please let me know if you have problems or successes.
 
+# Install
+
+`npm install sql-fixtures`
+
 # Examples
 ## Hello World Example
 
@@ -21,7 +25,7 @@ var dataSpec = {
   }
 };
 
-var dbConfig = {...}; // see below
+var dbConfig = {...}; // see "Connecting to the database" below
 
 sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
   // database now contains one more row in the Users table
@@ -157,6 +161,23 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 sqlFixtures.create(dbConfig, dataSpec).done(function(result) {
 }, function(err) {
 });
+```
+# Connecting to the database
+`sqlFixtures.create()`'s first argument is a dbConfig object. This is passed directly to Knex. See [Knex's docs on configuration](http://knexjs.org/#Installation-client) for the details, but generally you just need to do this:
+
+```javascript
+var dbConfig = {
+  client: 'pg',
+  connection: {
+    host: 'localhost',
+    user: 'testdb',
+    password: 'password',
+    database: 'testdb',
+    port: 15432
+  }
+};
+
+sqlFixtures.create(dbConfig, dataSpec) ...
 ```
 
 # Disconnecting from the database
