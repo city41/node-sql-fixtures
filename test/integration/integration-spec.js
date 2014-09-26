@@ -59,4 +59,41 @@ describe('fixtureGenerator', function() {
       });
     });
   });
+
+  it('should properly deal with same types at different priorities', function(done) {
+    var dataConfig = {
+      Users: [{
+        username: 'bob'
+      }, {
+        username: "Items:0:name"
+      }],
+      Items: {
+        name: "bob's item",
+        userId: 'Users:0'
+      }
+    };
+
+    var knex = this.knex;
+    fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      expect(results.Users[0].id).to.be.a.number;
+      expect(results.Users[1].id).to.be.a.number;
+      expect(results.Items[0].id).to.be.a.number;
+
+      expect(results.Users[0].username).to.eql('bob');
+      expect(results.Users[1].username).to.eql("bob's item");
+      expect(results.Items[0].name).to.eql("bob's item");
+      expect(results.Items[0].userId).to.eql(results.Users[0].id);
+
+      // verify the data made it into the database
+      knex('Users').whereIn('id', [results.Users[0].id, results.Users[1].id]).then(function(result) {
+        expect(result[0].username).to.eql('bob');
+        expect(result[1].username).to.eql("bob's item");
+
+        knex('Items').where('id', results.Items[0].id).then(function(result) {
+          expect(result[0].name).to.eql("bob's item");
+          done();
+        });
+      });
+    });
+  });
 });
