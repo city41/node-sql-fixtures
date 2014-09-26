@@ -2,10 +2,10 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 
 
-gulp.task('test', function() {
+gulp.task('test:unit', function() {
   return gulp.src([
     './test/helpers/*.js',
-    './test/specs/*.js'
+    './test/unit/*.js'
   ])
     .pipe(mocha());
 });
