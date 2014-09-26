@@ -25,3 +25,8 @@ gulp.task('test:integration', ['reset:db'], function() {
   ])
     .pipe(mocha());
 });
+
+gulp.task('test', [
+  'test:unit',
+  'test:integration'
+]);
