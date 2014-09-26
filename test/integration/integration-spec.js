@@ -1,4 +1,6 @@
+var _ = require('lodash');
 var fixtureGenerator = require('../../lib/fixture-generator');
+
 
 var dbConfig = {
   client: 'pg',
@@ -58,6 +60,21 @@ describe('fixtureGenerator', function() {
           expect(result[0].username).to.eql('bob');
           done();
         });
+      });
+    });
+
+    it('should leave the passed in data spec alone', function() {
+      var dataConfig = {
+        Users: {
+          username: 'bob'
+        }
+      };
+
+      var originalConfig = _.cloneDeep(dataConfig);
+
+      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        expect(results.Users[0].username).to.eql('bob');
+        expect(originalConfig).to.eql(dataConfig);
       });
     });
 

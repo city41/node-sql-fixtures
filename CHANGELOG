@@ -1,0 +1,5 @@
+0.0.1 - Sept 26, 2014
+-- bug fix: Cloning the passed in data spec so as to not alter the original
+
+0.0.0 - Sept 26, 2014
+-- original release
