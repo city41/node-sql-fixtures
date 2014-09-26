@@ -118,6 +118,8 @@ var dataSpec = {
 };
 ```
 
+**IMPORTANT:** The result of the arbitrary sql is not returned to you at all. In the above example the returned `result` object will have `Users` on it, but no sign of `Items` anywhere.
+
 ## Many to Many Relations
 sql-fixtures does not support many to many relations directly, but it can be accomplished with sql
 
