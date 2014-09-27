@@ -125,24 +125,22 @@ var dataSpec = {
 **IMPORTANT:** The result of the arbitrary sql is not returned to you at all. In the above example the returned `result` object will have `Users` on it, but no sign of `Items` anywhere.
 
 ## Many to Many Relations
-sql-fixtures does not support many to many relations directly, but it can be accomplished with sql
+Many to many through a join table is doable
 
 ```javascript
 var dataSpec = {
-  Items: [{
-    name: 'apple'
-  }, {
-    name: 'tomato'
-  }],
-  Categories: [{
-    name: 'fruit'
-  }, {
-    name: 'vegetable'
-  }],
-  sql: [
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:0}, {Categories:0})',
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:1}, {Categories:0})',
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:1}, {Categories:1})'
+  Items: [
+    { name: 'apple' },
+    { name: 'tomato' }
+  ],
+  Categories: [
+    { name: 'fruit' },
+    { name: 'vegetable' }
+  ],
+  Categories_Items: [
+    { itemId: 'Items:0', categoryId: 'Categories:0' },
+    { itemId: 'Items:1', categoryId: 'Categories:0' },
+    { itemId: 'Items:1', categoryId: 'Categories:1' }
   ]
 };
 ```
