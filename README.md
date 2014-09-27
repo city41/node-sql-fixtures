@@ -4,7 +4,9 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 # Supported Databases
 
-Internally sql-fixtures uses [Knex.js](http://knexjs.org/) and so it supports any database Knex.js does: sqlite, MySQL, MariaDB and PostgreSQL. However, so far only PostgreSQL has been tested directly. If you use this on other databases, please let me know if you have problems or successes.
+PostgreSQL, MySQL, MariaDB and sqlite
+
+Thanks to using [Knex.js](http:/www.knexjs.org) internally
 
 # Install
 
@@ -41,11 +43,10 @@ Just turn the object into an array if more than one is needed
 
 ```javascript
 var dataSpec = {
-  Users: [{
-    username: 'bob'
-  }, {
-    username: 'sally'
-  }]
+  Users: [
+    { username: 'bob' },
+    { username: 'sally' }
+  ]
 };
 ```
 
@@ -67,7 +68,7 @@ var dataSpec = {
 
 var dbConfig = {...}; // see below
 sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
-  console.log(result.Items[0].userId == result.Users[0].id); // true
+  console.log(result.Items[0].userId === result.Users[0].id); // true
 });
 ```
 
@@ -99,11 +100,10 @@ If you want to resolve to another column, add it to the string:
 
 ```javascript
 var dataSpec = {
-  Users: [{
-    username: 'bob'
-  }, {
-    username: 'Users:0:username'
-  }]
+  Users: [
+    { username: 'bob' },
+    { username: 'Users:0:username' }
+  ]
 };
 ```
 
@@ -122,7 +122,7 @@ var dataSpec = {
 };
 ```
 
-**IMPORTANT:** The result of the arbitrary sql is not returned to you at all. In the above example the returned `result` object will have `Users` on it, but no sign of `Items` anywhere.
+**IMPORTANT:** Currently the result of the arbitrary sql is not returned to you at all. In the above example the returned `result` object will have `Users` on it, but no sign of `Items` anywhere.
 
 ## Many to Many Relations
 Many to many through a join table is doable
@@ -155,7 +155,6 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 
 // ... or ...
 
-// both then and done are available, internally
 sqlFixtures.create(dbConfig, dataSpec).done(function(result) {
 }, function(err) {
 });
