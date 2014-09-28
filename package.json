@@ -1,6 +1,6 @@
 {
   "name": "sql-fixtures",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Populate a SQL database with fixture data",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,11 @@
     "knex": "^0.6.22",
     "lodash": "^2.4.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/city41/node-sql-fixtures.git"
+  },
+  "homepage": "https://github.com/city41/node-sql-fixtures",
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
