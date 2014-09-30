@@ -93,31 +93,66 @@ describe('prioritize', function() {
     }]);
   });
 
-  it('should return an error if a dependency does not exist', function() {
-    var config = {
-      Users: {
-        username: 'bob'
-      },
-      Challenges: [{
-        createdById: 'Tasks:0',
-        name: 'my challenge'
-      }]
-    };
+  describe('spec ids', function() {
+    it('should utilize spec ids when prioritizing', function() {
+      var config = {
+        Users: [{
+          username: 'bob',
+          specId: 'myId'
+        }, {
+          username: 'Challenges:0:name'
+        }],
+        Challenges: [{
+          createdById: 'Users:myId',
+          name: 'my challenge'
+        }]
+      };
 
-    expect(prioritize(config)).to.be.an.instanceOf(Error)
+      expect(prioritize(config)).to.eql([{
+        Users: [{
+          username: 'bob',
+          specId: 'myId'
+        }]
+      }, {
+        Challenges: [{
+          name: 'my challenge',
+          createdById: 'Users:myId'
+        }]
+      }, {
+        Users: [{
+          username: 'Challenges:0:name'
+        }]
+      }]);
+    });
   });
 
-  it('should return an error if a dependency is out of bounds', function() {
-    var config = {
-      Users: {
-        username: 'bob'
-      },
-      Challenges: [{
-        createdById: 'Users:1',
-        name: 'my challenge'
-      }]
-    };
+  describe('errors', function() {
+    it('should return an error if a dependency does not exist', function() {
+      var config = {
+        Users: {
+          username: 'bob'
+        },
+        Challenges: [{
+          createdById: 'Tasks:0',
+          name: 'my challenge'
+        }]
+      };
 
-    expect(prioritize(config)).to.be.an.instanceOf(Error)
+      expect(prioritize(config)).to.be.an.instanceOf(Error)
+    });
+
+    it('should return an error if a dependency is out of bounds', function() {
+      var config = {
+        Users: {
+          username: 'bob'
+        },
+        Challenges: [{
+          createdById: 'Users:1',
+          name: 'my challenge'
+        }]
+      };
+
+      expect(prioritize(config)).to.be.an.instanceOf(Error)
+    });
   });
 });

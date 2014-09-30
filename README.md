@@ -93,6 +93,29 @@ var dataSpec = {
 };
 ```
 
+## Resolving using spec ids
+
+If you are generating a lot of data, indices can become tedious. You can use a `specId` instead.
+
+```javascript
+var dataSpec = {
+  Users: {
+    username: 'bob',
+    specId: 'mySpecialUser'
+  },
+  Items: {
+    // this resolves to bob's id
+    // at creation time
+    userId: 'Users:mySpecialUser',
+    name: 'shovel'
+  }
+};
+
+var dbConfig = {...}; // see below
+sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
+  console.log(result.Items[0].userId === result.Users[0].id); // true
+});
+
 ## Resolving other properties
 When using a resolution string (ie `Users:0`), it assumes you want the `id` property. (See below for more info on "id" columns)
 

@@ -14,6 +14,8 @@ var dbConfig = {
 };
 
 describe('fixtureGenerator', function() {
+  this.enableTimeouts(false);
+
   before(function(done) {
     var knex = this.knex = require('knex')(dbConfig);
     knex.schema.createTable('Users', function(table) {
@@ -124,8 +126,8 @@ describe('fixtureGenerator', function() {
             username: 'sally'
           }],
           sql: [
-            'insert into "Items" ("name", "userId") values (\'rawsql\', {Users:0})',
-            'insert into "Items" ("name", "userId") values (\'rawsql\', {Users:1})'
+            'insert into "Items" ("name", "userId") values (\'rawsql0\', {Users:0})',
+            'insert into "Items" ("name", "userId") values (\'rawsql1\', {Users:1})'
           ]
         };
 
@@ -133,11 +135,40 @@ describe('fixtureGenerator', function() {
         fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
           expect(results.Users.length).to.eql(2);
           expect(results.Items).to.be.undefined;
-          knex('Items').where('name', 'rawsql').then(function(knexResult) {
+          knex('Items').where('name', 'rawsql0').then(function(knexResult) {
             expect(knexResult[0].userId).to.eql(results.Users[0].id);
-            expect(knexResult[1].userId).to.eql(results.Users[1].id);
-            done();
+            knex('Items').where('name', 'rawsql1').then(function(knexResult) {
+              expect(knexResult[0].userId).to.eql(results.Users[1].id);
+              done();
+            });
           });
+        });
+      });
+    });
+  });
+
+  describe('spec ids', function() {
+    it('should resolved spec ids', function(done) {
+      var dataConfig = {
+        Users: {
+          specId: 'myUser',
+          username: 'bob'
+        },
+        Items: {
+          name: "bob's item",
+          userId: 'Users:myUser'
+        }
+      };
+
+      var knex = this.knex;
+      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        expect(results.Users[0].username).to.eql('bob');
+        expect(results.Items[0].userId).to.eql(results.Users[0].id);
+
+        // verify the data made it into the database
+        knex('Users').where('id', results.Users[0].id).then(function(result) {
+          expect(result[0].username).to.eql('bob');
+          done();
         });
       });
     });

@@ -87,4 +87,28 @@ describe('resolve-dependencies', function() {
     var resolved = resolveDependencies(previouslyResolved, toBeResolved);
     expect(resolved.sql[0]).to.eql('foo 6 6');
   });
+
+  describe('spec ids', function() {
+    it('should resolve the spec id', function() {
+      var toBeResolved = {
+        Challenges: [{
+          foo: 'Users:myId'
+        }]
+      };
+
+      var previouslyResolved = {
+        Users: [{
+          id: 8,
+          specId: 'myId'
+        }]
+      };
+
+      var resolved = resolveDependencies(previouslyResolved, toBeResolved);
+      expect(resolved).to.eql({
+        Challenges: [{
+          foo: 8
+        }]
+      });
+    });
+  });
 });
