@@ -115,6 +115,7 @@ var dbConfig = {...}; // see below
 sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
   console.log(result.Items[0].userId === result.Users[0].id); // true
 });
+```
 
 ## Resolving other properties
 When using a resolution string (ie `Users:0`), it assumes you want the `id` property. (See below for more info on "id" columns)
