@@ -138,7 +138,9 @@ describe('prioritize', function() {
         }]
       };
 
-      expect(prioritize(config)).to.be.an.instanceOf(Error)
+      var result = prioritize(config);
+      expect(result).to.be.an.instanceOf(Error)
+      expect(result.toString()).to.contain("Tasks:0")
     });
 
     it('should return an error if a dependency is out of bounds', function() {
