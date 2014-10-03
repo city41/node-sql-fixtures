@@ -1,96 +1,156 @@
 var prioritize = require('../../lib/prioritize');
 
 describe('prioritize', function() {
-  it('should prioritize a simple case', function() {
-    var config = {
-      Users: {
-        username: 'bob'
-      }
-    };
+  describe('prioritizing', function() {
+    it('should prioritize a simple case', function() {
+      var config = {
+        Users: {
+          username: 'bob'
+        }
+      };
 
-    expect(prioritize(config)).to.eql([{
-      Users: [{
-        username: 'bob'
-      }]
-    }]);
-  });
+      expect(prioritize(config)).to.eql([{
+        Users: [{
+          username: 'bob'
+        }]
+      }]);
+    });
 
-  it('should prioritize with one dependency', function() {
-    var config = {
-      Users: {
-        username: 'bob'
-      },
-      Challenges: [{
-        createdById: 'Users:0',
-        name: 'my challenge'
-      }]
-    };
+    it('should prioritize with one dependency', function() {
+      var config = {
+        Users: {
+          username: 'bob'
+        },
+        Challenges: [{
+          createdById: 'Users:0',
+          name: 'my challenge'
+        }]
+      };
 
-    expect(prioritize(config)).to.eql([{
-      Users: [{
-        username: 'bob'
-      }]
-    }, {
-      Challenges: [{
-        name: 'my challenge',
-        createdById: 'Users:0'
-      }]
-    }]);
-  });
-
-  it('should prioritize later dependencies correctly', function() {
-    var config = {
-      Users: [{
-        username: 'bob'
+      expect(prioritize(config)).to.eql([{
+        Users: [{
+          username: 'bob'
+        }]
       }, {
-        username: 'Challenges:0:name'
-      }],
-      Challenges: [{
-        createdById: 'Users:0',
-        name: 'my challenge'
-      }]
-    };
+        Challenges: [{
+          name: 'my challenge',
+          createdById: 'Users:0'
+        }]
+      }]);
+    });
 
-    expect(prioritize(config)).to.eql([{
-      Users: [{
-        username: 'bob'
-      }]
-    }, {
-      Challenges: [{
-        name: 'my challenge',
-        createdById: 'Users:0'
-      }]
-    }, {
-      Users: [{
-        username: 'Challenges:0:name'
-      }]
-    }]);
-  });
+    it('should prioritize later dependencies correctly', function() {
+      var config = {
+        Users: [{
+          username: 'bob'
+        }, {
+          username: 'Challenges:0:name'
+        }],
+        Challenges: [{
+          createdById: 'Users:0',
+          name: 'my challenge'
+        }]
+      };
 
-  it('should prioritize sql dependencies correctly', function() {
-    var config = {
-      Users: {
-        username: 'bob'
+      expect(prioritize(config)).to.eql([{
+        Users: [{
+          username: 'bob'
+        }]
+      }, {
+        Challenges: [{
+          name: 'my challenge',
+          createdById: 'Users:0'
+        }]
+      }, {
+        Users: [{
+          username: 'Challenges:0:name'
+        }]
+      }]);
+    });
+
+    it('should prioritize sql dependencies correctly', function() {
+      var config = {
+        Users: {
+          username: 'bob'
+        },
+        Items: {
+          name: 'my item',
+          userId: 'Users:0'
+        },
+        sql: 'foo {Users:0} {Items:0}'
+      };
+
+      expect(prioritize(config)).to.eql([{
+        Users: [{
+          username: 'bob'
+        }]
+      }, {
+        Items: [{
+          name: 'my item',
+          userId: 'Users:0'
+        }]
+      }, {
+        sql: ['foo {Users:0} {Items:0}']
+      }]);
+    });
+
+    it('should prioritize a more advanced case', function() {
+      var config = {
+        Users: [
+          { username: "bob" }
+        ],
+        Comments: [{
+          comment: 'comment 1',
+          createdById: "Users:0",
+          userId: "Users:0"
+        }, {
+          comment: 'child of 1',
+          createdById: "Users:0",
+          userId: "Users:0",
+          parentId: "Comments:0"
+        }],
+        LikeVotes: [{
+          commentId: "Comments:0",
+          createdById: "Users:0"
+        }, {
+           commentId: "Comments:1",
+           createdById: "Users:0"
+        }]
+      };
+
+      debugger;
+      expect(prioritize(config)).to.eql([
+      {
+        Users: [
+          { username: "bob" }
+        ],
       },
-      Items: {
-        name: 'my item',
-        userId: 'Users:0'
+      {
+        Comments: [{
+          comment: 'comment 1',
+          createdById: "Users:0",
+          userId: "Users:0"
+        }]
       },
-      sql: 'foo {Users:0} {Items:0}'
-    };
-
-    expect(prioritize(config)).to.eql([{
-      Users: [{
-        username: 'bob'
-      }]
-    }, {
-      Items: [{
-        name: 'my item',
-        userId: 'Users:0'
-      }]
-    }, {
-      sql: ['foo {Users:0} {Items:0}']
-    }]);
+      {
+        Comments: [{
+          comment: 'child of 1',
+          createdById: "Users:0",
+          userId: "Users:0",
+          parentId: "Comments:0"
+        }],
+        LikeVotes: [{
+          commentId: "Comments:0",
+          createdById: "Users:0"
+        }]
+      },
+      {
+        LikeVotes: [{
+          commentId: "Comments:1",
+          createdById: "Users:0"
+        }]
+      }]);
+    });
   });
 
   describe('spec ids', function() {

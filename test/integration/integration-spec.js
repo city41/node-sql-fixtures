@@ -27,7 +27,21 @@ describe('fixtureGenerator', function() {
         table.string('name');
         table.integer('userId').references('id').inTable('Users');
       }).then(function() {
-        done();
+        knex.schema.createTable('Comments', function(table) {
+          table.increments('id').primary();
+          table.string('comment');
+          table.integer('userId');
+          table.integer('parentId');
+          table.integer('createdById').references('id').inTable('Users');
+        }).then(function() {
+          knex.schema.createTable('LikeVotes', function(table) {
+            table.increments('id').primary();
+            table.integer('commentId').references('id').inTable('Comments');
+            table.integer('createdById').references('id').inTable('Users');
+          }).then(function() {
+            done();
+          });
+        })
       });
     });
   });
@@ -113,6 +127,48 @@ describe('fixtureGenerator', function() {
             expect(result[0].name).to.eql("bob's item");
             done();
           });
+        });
+      });
+    });
+
+    it('should properly resolve same types at different priorities', function(done) {
+      var dataConfig = {
+        Users: [
+          { username: "bob" }
+        ],
+        Comments: [{
+          comment: 'comment 1',
+          createdById: "Users:0",
+          userId: "Users:0"
+        }, {
+          comment: 'child of 1',
+          createdById: "Users:0",
+          userId: "Users:0",
+          parentId: "Comments:0"
+        }],
+        LikeVotes: [{
+          commentId: "Comments:0",
+          createdById: "Users:0"
+        }, {
+           commentId: "Comments:1",
+           createdById: "Users:0"
+        }]
+      };
+
+      var knex = this.knex;
+      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        expect(results.Comments[1].parentId).to.be.a('number');
+        expect(results.Comments[1].parentId).to.eql(results.Comments[0].id);
+
+        expect(results.LikeVotes[1].commentId).to.be.a('number');
+        expect(results.LikeVotes[1].commentId).to.eql(results.Comments[1].id);
+
+        expect(results.LikeVotes[1].createdById).to.be.a('number');
+        expect(results.LikeVotes[1].createdById).to.eql(results.Users[0].id);
+
+        knex('LikeVotes').where('id', results.LikeVotes[1].id).then(function(result) {
+          expect(result[0].commentId).to.eql(results.Comments[1].id);
+          done();
         });
       });
     });
