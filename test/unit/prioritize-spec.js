@@ -118,7 +118,6 @@ describe('prioritize', function() {
         }]
       };
 
-      debugger;
       expect(prioritize(config)).to.eql([
       {
         Users: [
@@ -199,8 +198,8 @@ describe('prioritize', function() {
       };
 
       var result = prioritize(config);
-      expect(result).to.be.an.instanceOf(Error)
-      expect(result.toString()).to.contain("Tasks:0")
+      expect(result).to.be.an.instanceOf(Error);
+      expect(result.toString()).to.contain("Tasks:0");
     });
 
     it('should return an error if a dependency is out of bounds', function() {
@@ -214,7 +213,7 @@ describe('prioritize', function() {
         }]
       };
 
-      expect(prioritize(config)).to.be.an.instanceOf(Error)
+      expect(prioritize(config)).to.be.an.instanceOf(Error);
     });
   });
 });

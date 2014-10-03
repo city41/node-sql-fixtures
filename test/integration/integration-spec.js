@@ -41,7 +41,7 @@ describe('fixtureGenerator', function() {
           }).then(function() {
             done();
           });
-        })
+        });
       });
     });
   });
