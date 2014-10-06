@@ -10,6 +10,10 @@ Thanks to using [Knex.js](http:/www.knexjs.org) internally.
 
 **NOTE:** I've only used this on postgres 9.3, works great. If you use it on another database, please let me know how it goes.
 
+# Still working out kinks
+
+I am actively using sql-fixtures for a project. As I use it, I am finding more issues. Keep an eye on the issues heer at github to get a sense of where the project is at. Currently it's decent, but there are some scenarios that don't work just yet.
+
 # Install
 
 `npm install sql-fixtures`
