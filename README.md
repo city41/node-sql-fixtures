@@ -197,7 +197,18 @@ var dataSpec = {
   ]
 };
 ```
+## String values with colons in them
 
+If you need a literal colon in your string value, double it up to escape it:
+
+```javascript
+var dataSpec = {
+  Website: {
+    // https://github.com is what gets written to the database
+    url: 'https:://github.com'
+  }
+};
+```
 
 # Promises and Callbacks
 

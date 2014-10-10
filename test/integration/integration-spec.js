@@ -230,6 +230,27 @@ describe('fixtureGenerator', function() {
     });
   });
 
+  describe('escaping', function() {
+    it('should unescape colons', function(done) {
+      var dataConfig = {
+        Users: {
+          username: 'foo::bar'
+        }
+      };
+
+      var knex = this.knex;
+      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        expect(results.Users[0].username).to.eql('foo:bar');
+
+        // verify the data made it into the database
+        knex('Users').where('id', results.Users[0].id).then(function(result) {
+          expect(result[0].username).to.eql('foo:bar');
+          done();
+        });
+      });
+    });
+  });
+
   describe('calling the callback', function() {
     it('should call the callback if provided', function(done) {
       var dataConfig = {
