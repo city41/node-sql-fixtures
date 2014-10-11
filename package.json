@@ -1,11 +1,18 @@
 {
   "name": "sql-fixtures",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Populate a SQL database with fixture data",
   "main": "index.js",
   "scripts": {
     "test": "gulp test"
   },
+  "files": [
+    "index.js",
+    "lib",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG"
+  ],
   "keywords": [
     "fixtures",
     "sql",

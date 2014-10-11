@@ -1,3 +1,24 @@
+0.1.5 - Oct 11, 2014
+-- Cleaned up the npm package, removing all tests and vagrant stuff
+
+0.1.4 - Oct 10, 2014
+-- escaping colons with '::'
+
+0.1.3 - Oct 3, 2014
+-- Bug fix for same types at different priorities not resolving
+
+0.1.2 - Oct 2, 2014
+-- Better error output if a dedendency cannot be resolved
+
+0.1.1 - Sept 30, 2014
+-- Fixed the README for specIds
+
+0.1.0 - Sept 30, 2014
+-- support for specIds
+
+0.0.2 - Sept 29, 2014
+-- Improved README
+
 0.0.1 - Sept 26, 2014
 -- bug fix: Cloning the passed in data spec so as to not alter the original
 
