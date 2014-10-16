@@ -5,13 +5,15 @@ describe('prioritize', function() {
     it('should prioritize a simple case', function() {
       var config = {
         Users: {
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }
       };
 
       expect(prioritize(config)).to.eql([{
         Users: [{
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }]
       }]);
     });
@@ -19,22 +21,26 @@ describe('prioritize', function() {
     it('should prioritize with one dependency', function() {
       var config = {
         Users: {
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         },
         Challenges: [{
-          createdById: 'Users:0',
-          name: 'my challenge'
+          createdById: 'Users:u0',
+          name: 'my challenge',
+          specId: 'c0'
         }]
       };
 
       expect(prioritize(config)).to.eql([{
         Users: [{
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }]
       }, {
         Challenges: [{
           name: 'my challenge',
-          createdById: 'Users:0'
+          createdById: 'Users:u0',
+          specId: 'c0'
         }]
       }]);
     });
@@ -42,28 +48,34 @@ describe('prioritize', function() {
     it('should prioritize later dependencies correctly', function() {
       var config = {
         Users: [{
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }, {
-          username: 'Challenges:0:name'
+          username: 'Challenges:c0:name',
+          specId: 'u1'
         }],
         Challenges: [{
-          createdById: 'Users:0',
-          name: 'my challenge'
+          createdById: 'Users:u0',
+          name: 'my challenge',
+          specId: 'c0'
         }]
       };
 
       expect(prioritize(config)).to.eql([{
         Users: [{
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }]
       }, {
         Challenges: [{
           name: 'my challenge',
-          createdById: 'Users:0'
+          createdById: 'Users:u0',
+          specId: 'c0'
         }]
       }, {
         Users: [{
-          username: 'Challenges:0:name'
+          username: 'Challenges:c0:name',
+          specId: 'u1'
         }]
       }]);
     });
@@ -71,82 +83,96 @@ describe('prioritize', function() {
     it('should prioritize sql dependencies correctly', function() {
       var config = {
         Users: {
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         },
         Items: {
           name: 'my item',
-          userId: 'Users:0'
+          userId: 'Users:u0',
+          specId: 'i0'
         },
-        sql: 'foo {Users:0} {Items:0}'
+        sql: 'foo {Users:u0} {Items:i0}'
       };
 
       expect(prioritize(config)).to.eql([{
         Users: [{
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         }]
       }, {
         Items: [{
           name: 'my item',
-          userId: 'Users:0'
+          userId: 'Users:u0',
+          specId: 'i0'
         }]
       }, {
-        sql: ['foo {Users:0} {Items:0}']
+        sql: ['foo {Users:u0} {Items:i0}']
       }]);
     });
 
     it('should prioritize a more advanced case', function() {
       var config = {
-        Users: [
-          { username: "bob" }
-        ],
+        Users: [{
+          username: "bob",
+          specId: 'u0'
+        }],
         Comments: [{
           comment: 'comment 1',
-          createdById: "Users:0",
-          userId: "Users:0"
+          createdById: "Users:u0",
+          userId: "Users:u0",
+          specId: 'c0'
         }, {
           comment: 'child of 1',
-          createdById: "Users:0",
-          userId: "Users:0",
-          parentId: "Comments:0"
+          createdById: "Users:u0",
+          userId: "Users:u0",
+          parentId: "Comments:c0",
+          specId: 'c1'
         }],
         LikeVotes: [{
-          commentId: "Comments:0",
-          createdById: "Users:0"
+          commentId: "Comments:c0",
+          createdById: "Users:u0",
+          specId: 'lv0'
         }, {
-           commentId: "Comments:1",
-           createdById: "Users:0"
+           commentId: "Comments:c1",
+           createdById: "Users:u0",
+           specId: 'lv1'
         }]
       };
 
       expect(prioritize(config)).to.eql([
       {
-        Users: [
-          { username: "bob" }
-        ],
+        Users: [{
+          username: "bob",
+          specId: 'u0'
+        }],
       },
       {
         Comments: [{
           comment: 'comment 1',
-          createdById: "Users:0",
-          userId: "Users:0"
+          createdById: "Users:u0",
+          userId: "Users:u0",
+          specId: 'c0'
         }]
       },
       {
         Comments: [{
           comment: 'child of 1',
-          createdById: "Users:0",
-          userId: "Users:0",
-          parentId: "Comments:0"
+          createdById: "Users:u0",
+          userId: "Users:u0",
+          parentId: "Comments:c0",
+          specId: 'c1'
         }],
         LikeVotes: [{
-          commentId: "Comments:0",
-          createdById: "Users:0"
+          commentId: "Comments:c0",
+          createdById: "Users:u0",
+          specId: 'lv0'
         }]
       },
       {
         LikeVotes: [{
-          commentId: "Comments:1",
-          createdById: "Users:0"
+          commentId: "Comments:c1",
+          createdById: "Users:u0",
+          specId: 'lv1'
         }]
       }]);
     });
@@ -159,11 +185,13 @@ describe('prioritize', function() {
           username: 'bob',
           specId: 'myId'
         }, {
-          username: 'Challenges:0:name'
+          username: 'Challenges:c0:name',
+          specId: 'u1'
         }],
         Challenges: [{
           createdById: 'Users:myId',
-          name: 'my challenge'
+          name: 'my challenge',
+          specId: 'c0'
         }]
       };
 
@@ -175,11 +203,13 @@ describe('prioritize', function() {
       }, {
         Challenges: [{
           name: 'my challenge',
-          createdById: 'Users:myId'
+          createdById: 'Users:myId',
+          specId: 'c0'
         }]
       }, {
         Users: [{
-          username: 'Challenges:0:name'
+          username: 'Challenges:c0:name',
+          specId: 'u1'
         }]
       }]);
     });
@@ -189,27 +219,31 @@ describe('prioritize', function() {
     it('should return an error if a dependency does not exist', function() {
       var config = {
         Users: {
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         },
         Challenges: [{
-          createdById: 'Tasks:0',
-          name: 'my challenge'
+          createdById: 'Tasks:t0',
+          name: 'my challenge',
+          specId: 'c0'
         }]
       };
 
       var result = prioritize(config);
       expect(result).to.be.an.instanceOf(Error);
-      expect(result.toString()).to.contain("Tasks:0");
+      expect(result.toString()).to.contain("Tasks:t0");
     });
 
     it('should return an error if a dependency is out of bounds', function() {
       var config = {
         Users: {
-          username: 'bob'
+          username: 'bob',
+          specId: 'u0'
         },
         Challenges: [{
-          createdById: 'Users:1',
-          name: 'my challenge'
+          createdById: 'Users:u1',
+          name: 'my challenge',
+          specId: 'c0'
         }]
       };
 
