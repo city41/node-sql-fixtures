@@ -174,36 +174,39 @@ describe('fixtureGenerator', function() {
       });
     });
 
-    // when this spec passes, then issue #5 is resolved
-    // it('should properly resolve dependencies that might move around', function(done) {
-    //   var dataConfig = {
-    //     Users: [{
-    //       username: 'bob'
-    //     }, {
-    //       username: 'sally'
-    //     }],
-    //     Items: [{
-    //       name: 'item 1',
-    //       userId: 'Users:0'
-    //     }],
-    //     Comments: [{
-    //       createdById: "Users:0",
-    //       itemId: "Items:0",
-    //       comment: "comment on challenge"
-    //     }, {
-    //       createdById: "Users:0",
-    //       userId: "Users:1",
-    //       comment: "comment on user 1's wall"
-    //     }]
-    //   };
-    //
-    //   var knex = this.knex;
-    //   fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
-    //     expect(results.Comments[1].comment).to.eql("comment on user 1's wall");
-    //     expect(results.Comments[1].userId).to.eql(results.Users[1].id);
-    //     done();
-    //   });
-    // });
+    // this spec asserts that issue #5 is resolved
+    // in the below, the prioritization ends up moving the comments around
+    // and so before the fix, results.Comments[0] is what the user expected to
+    // find at results.Comments[1]
+    it('should properly resolve dependencies that might move around', function(done) {
+      var dataConfig = {
+        Users: [{
+          username: 'bob'
+        }, {
+          username: 'sally'
+        }],
+        Items: [{
+          name: 'item 1',
+          userId: 'Users:0'
+        }],
+        Comments: [{
+          createdById: "Users:0",
+          itemId: "Items:0",
+          comment: "comment on challenge"
+        }, {
+          createdById: "Users:0",
+          userId: "Users:1",
+          comment: "comment on user 1's wall"
+        }]
+      };
+
+      var knex = this.knex;
+      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        expect(results.Comments[1].comment).to.eql("comment on user 1's wall");
+        expect(results.Comments[1].userId).to.eql(results.Users[1].id);
+        done();
+      });
+    });
 
     describe("invoking raw sql", function() {
       it("should invoke raw sql", function(done) {
