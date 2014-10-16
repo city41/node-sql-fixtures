@@ -1,3 +1,6 @@
+0.1.6 - Oct 16, 2014
+-- fixed issue #5, where complex dependencies could result in records changing position in the final result
+
 0.1.5 - Oct 11, 2014
 -- Cleaned up the npm package, removing all tests and vagrant stuff
 
