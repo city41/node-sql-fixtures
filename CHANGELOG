@@ -1,3 +1,6 @@
+0.1.7 - Oct 16, 2014
+-- Fixed some minor bugs that creeped in during 0.1.6
+
 0.1.6 - Oct 16, 2014
 -- fixed issue #5, where complex dependencies could result in records changing position in the final result
 

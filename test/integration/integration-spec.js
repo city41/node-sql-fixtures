@@ -70,7 +70,9 @@ describe('fixtureGenerator', function() {
       var knex = this.knex;
       fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
         expect(results.Users[0].username).to.eql('bob');
+        expect(results.Users[0].specId).to.be.undefined;
         expect(results.Items[0].userId).to.eql(results.Users[0].id);
+        expect(results.Items[0].specId).to.be.undefined;
 
         // verify the data made it into the database
         knex('Users').where('id', results.Users[0].id).then(function(result) {

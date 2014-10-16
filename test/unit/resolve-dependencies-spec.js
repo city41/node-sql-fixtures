@@ -17,13 +17,14 @@ describe('resolve-dependencies', function() {
   it('should resolve the dependency', function() {
     var toBeResolved = {
       Challenges: [{
-        foo: 'Users:0'
+        foo: 'Users:u0'
       }]
     };
 
     var previouslyResolved = {
       Users: [{
-        id: 4
+        id: 4,
+        specId: 'u0'
       }]
     };
 
@@ -38,13 +39,14 @@ describe('resolve-dependencies', function() {
   it('should resolve a non-default property', function() {
     var toBeResolved = {
       Challenges: [{
-        foo: 'Users:0:bar'
+        foo: 'Users:u0:bar'
       }]
     };
 
     var previouslyResolved = {
       Users: [{
-        bar: 'baz'
+        bar: 'baz',
+        specId: 'u0'
       }]
     };
 
@@ -59,13 +61,14 @@ describe('resolve-dependencies', function() {
   it('should leave the value alone if no resolution can be found', function() {
     var toBeResolved = {
       Challenges: [{
-        foo: 'Users:1'
+        foo: 'Users:u1'
       }]
     };
 
     var previouslyResolved = {
       Users: [{
-        id: 6
+        id: 6,
+        specId: 'u0'
       }]
     };
 
@@ -75,12 +78,13 @@ describe('resolve-dependencies', function() {
 
   it('should resolve sql strings', function() {
     var toBeResolved = {
-      sql: ['foo {Users:0} {Users:0}']
+      sql: ['foo {Users:u0} {Users:u0}']
     };
 
     var previouslyResolved = {
       Users: [{
-        id: 6
+        id: 6,
+        specId: 'u0'
       }]
     };
 

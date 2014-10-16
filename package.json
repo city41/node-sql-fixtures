@@ -1,6 +1,6 @@
 {
   "name": "sql-fixtures",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Populate a SQL database with fixture data",
   "main": "index.js",
   "scripts": {
