@@ -55,11 +55,10 @@ describe('generate-spec-ids', function() {
         sql: 'foo {Users:0} {Users:0} {Users:1}'
       };
 
-      debugger;
       var generated = generateSpecIds(config);
       var user0SpecId = generated.Users[0].specId;
       var user1SpecId = generated.Users[1].specId;
-      var expectedSql = 'foo {Users:' + user0SpecId +'} {Users:' + user0SpecId +'} {Users:' + user1SpecId + '}'
+      var expectedSql = 'foo {Users:' + user0SpecId +'} {Users:' + user0SpecId +'} {Users:' + user1SpecId + '}';
       expect(generated.sql).to.eql(expectedSql);
     });
   });

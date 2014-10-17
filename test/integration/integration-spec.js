@@ -21,6 +21,7 @@ describe('fixtureGenerator', function() {
     knex.schema.createTable('Users', function(table) {
       table.increments('id').primary();
       table.string('username');
+      table.timestamp('createdAt').defaultTo(knex.raw('now()'));
     }).then(function() {
       knex.schema.createTable('Items', function(table) {
         table.increments('id').primary();
@@ -235,6 +236,21 @@ describe('fixtureGenerator', function() {
               done();
             });
           });
+        });
+      });
+    });
+
+    describe('auto populated columns', function() {
+      it('should return the auto populated columns in the result', function(done) {
+        var dataConfig = {
+          Users: {
+            username: 'bob'
+          }
+        };
+
+        fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+          expect(results.Users[0].createdAt).to.be.an.instanceOf(Date);
+          done();
         });
       });
     });

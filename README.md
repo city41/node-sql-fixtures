@@ -10,10 +10,6 @@ Thanks to using [Knex.js](http:/www.knexjs.org) internally.
 
 **NOTE:** I've only used this on postgres 9.3, works great. If you use it on another database, please let me know how it goes.
 
-# Still working out kinks
-
-I am actively using sql-fixtures for a project. As I use it, I am finding more issues. Keep an eye on the issues here at github to get a sense of where the project is at. Currently it's decent, but there are some scenarios that don't work just yet.
-
 # Install
 
 `npm install sql-fixtures`
@@ -155,10 +151,7 @@ var dataSpec = {
 **IMPORTANT:** Currently the result of the arbitrary sql is not returned to you at all. In the above example the returned `result` object will have `Users` on it, but no sign of `Items` anywhere.
 
 ## Many to Many Relations
-~~Many to many through a join table is doable~~
-Actually, this isn't true yet, I filed a [bug](https://github.com/city41/node-sql-fixtures/issues/3) for this.
-
-In the below, the `Categories_Items` will fail, because that table lacks an id column.
+Many to many through a join table is doable
 
 ```javascript
 var dataSpec = {
@@ -178,25 +171,6 @@ var dataSpec = {
 };
 ```
 
-The workaround is to use arbitrary sql instead
-
-```javascript
-var dataSpec = {
-  Items: [
-    { name: 'apple' },
-    { name: 'tomato' }
-  ],
-  Categories: [
-    { name: 'fruit' },
-    { name: 'vegetable' }
-  ],
-  sql: [
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:0}, {Categories:0})',
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:1}, {Categories:0})',
-    'insert into "Categories_Items" ("itemId", "categoryId") values ({Items:1}, {Categories:1})'
-  ]
-};
-```
 ## String values with colons in them
 
 If you need a literal colon in your string value, double it up to escape it:
