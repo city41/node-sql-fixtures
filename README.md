@@ -218,7 +218,7 @@ sqlFixtures.create(dbConfig, dataSpec) ...
 
 # Disconnecting from the database
 
-sqlFixtures opens a connection to your database using Knex and does not attempt to ever close it. You can close it yourself by calling `sqlFixtures.disconnect(callback)`. `disconnect` takes a callback and also returns a promise.
+sqlFixtures opens a connection to your database using Knex and does not attempt to ever close it. You can close it yourself by calling `sqlFixtures.destroy(callback)`. `destroy` takes a callback and also returns a promise.
 
 # Assumptions and Limitations
 
