@@ -2,6 +2,17 @@
 
 var fixtureGenerator = require('../../lib/fixture-generator');
 
+var dbConfig = {
+  client: 'pg',
+  connection: {
+    host: 'localhost',
+    user: 'testdb',
+    password: 'password',
+    database: 'testdb',
+    port: 5432
+  }
+};
+
 describe('fixtureGenerator', function() {
   describe('error handling', function() {
     var impossible = {
@@ -10,8 +21,17 @@ describe('fixtureGenerator', function() {
       }
     };
 
+    it('should throw on invalid database config', function(done) {
+      function invalidConfig() {
+        fixtureGenerator.create({}, impossible, function(err, result) {});
+      }
+
+      expect(invalidConfig).to.throw(Error);
+      done();
+    });
+
     it('should return the error in the callback', function(done) {
-      fixtureGenerator.create({}, impossible, function(err, result) {
+      fixtureGenerator.create(dbConfig, impossible, function(err, result) {
         expect(err).to.be.an.instanceOf(Error);
         expect(result).to.be.undefined;
         done();
@@ -19,7 +39,7 @@ describe('fixtureGenerator', function() {
     });
 
     it('should reject the promise', function(done) {
-      fixtureGenerator.create({}, impossible).then(function(result) {
+      fixtureGenerator.create(dbConfig, impossible).then(function(result) {
         throw new Error("Should not have returned a result");
       }, function(err) {
         expect(err).to.be.an.instanceOf(Error);

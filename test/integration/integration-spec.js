@@ -49,11 +49,7 @@ describe('fixtureGenerator', function() {
   });
 
   after(function(done) {
-    this.knex.destroy().then(function() {
-      fixtureGenerator.disconnect().then(function() {
-        done();
-      });
-    });
+    fixtureGenerator.destroy(done);
   });
 
   describe("generating fixtures", function() {

@@ -9,7 +9,7 @@ gulp.task('lint', function() {
    .pipe(jshint.reporter('default'));
 });
 
-gulp.task('test:unit', function() {
+gulp.task('test:unit', ['lint'], function() {
   return gulp.src([
     './test/helpers/*.js',
     './test/unit/*.js'
@@ -24,7 +24,7 @@ gulp.task('reset:db', shell.task(
   ])
 );
 
-gulp.task('test:integration', ['reset:db'], function() {
+gulp.task('test:integration', ['lint', 'reset:db'], function() {
   return gulp.src([
     './test/helpers/*.js',
     './test/integration/*.js'
