@@ -1,3 +1,9 @@
+0.1.9 - Oct 20, 2014
+-- sql-fixtures can now be instantiated if need be, and also used same as before (see README for more info)
+
+0.1.8 - Oct 16, 2014
+-- The inserts into the database now return all columns, enabling many-to-many and auto-populated columns to work
+
 0.1.7 - Oct 16, 2014
 -- Fixed some minor bugs that creeped in during 0.1.6
 

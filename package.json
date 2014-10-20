@@ -1,6 +1,6 @@
 {
   "name": "sql-fixtures",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Populate a SQL database with fixture data",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,9 @@
     "data"
   ],
   "author": "Matt Greer <matt.e.greer@gmail.com> (http://www.mattgreer.org/)",
+  "contributors": [
+    "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)"
+  ],
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.3.2",

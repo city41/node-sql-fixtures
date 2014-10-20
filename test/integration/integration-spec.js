@@ -1,23 +1,23 @@
 var _ = require('lodash');
-var fixtureGenerator = require('../../lib/fixture-generator');
+var FixtureGenerator = require('../../lib/fixture-generator');
 
-
-var dbConfig = {
-  client: 'pg',
-  connection: {
-    host: 'localhost',
-    user: 'testdb',
-    password: 'password',
-    database: 'testdb',
-    port: 15432
-  }
-};
-
-describe('fixtureGenerator', function() {
+describe('FixtureGenerator', function() {
   this.enableTimeouts(false);
 
   before(function(done) {
-    var knex = this.knex = require('knex')(dbConfig);
+    var dbConfig = {
+      client: 'pg',
+      connection: {
+        host: 'localhost',
+        user: 'testdb',
+        password: 'password',
+        database: 'testdb',
+        port: 15432
+      }
+    };
+
+    this.fixtureGenerator = new FixtureGenerator(dbConfig);
+    var knex = this.knex = this.fixtureGenerator.knex;
     knex.schema.createTable('Users', function(table) {
       table.increments('id').primary();
       table.string('username');
@@ -49,7 +49,7 @@ describe('fixtureGenerator', function() {
   });
 
   after(function(done) {
-    fixtureGenerator.destroy(done);
+    this.fixtureGenerator.destroy(done);
   });
 
   describe("generating fixtures", function() {
@@ -65,7 +65,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Users[0].username).to.eql('bob');
         expect(results.Users[0].specId).to.be.undefined;
         expect(results.Items[0].userId).to.eql(results.Users[0].id);
@@ -88,7 +88,7 @@ describe('fixtureGenerator', function() {
 
       var originalConfig = _.cloneDeep(dataConfig);
 
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Users[0].username).to.eql('bob');
         expect(originalConfig).to.eql(dataConfig);
       });
@@ -108,7 +108,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Users[0].id).to.be.a.number;
         expect(results.Users[1].id).to.be.a.number;
         expect(results.Items[0].id).to.be.a.number;
@@ -156,7 +156,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Comments[1].parentId).to.be.a('number');
         expect(results.Comments[1].parentId).to.eql(results.Comments[0].id);
 
@@ -200,7 +200,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Comments[1].comment).to.eql("comment on user 1's wall");
         expect(results.Comments[1].userId).to.eql(results.Users[1].id);
         done();
@@ -222,7 +222,7 @@ describe('fixtureGenerator', function() {
         };
 
         var knex = this.knex;
-        fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        this.fixtureGenerator.create(dataConfig).then(function(results) {
           expect(results.Users.length).to.eql(2);
           expect(results.Items).to.be.undefined;
           knex('Items').where('name', 'rawsql0').then(function(knexResult) {
@@ -244,7 +244,7 @@ describe('fixtureGenerator', function() {
           }
         };
 
-        fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+        this.fixtureGenerator.create(dataConfig).then(function(results) {
           expect(results.Users[0].createdAt).to.be.an.instanceOf(Date);
           done();
         });
@@ -266,7 +266,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Users[0].username).to.eql('bob');
         expect(results.Items[0].userId).to.eql(results.Users[0].id);
 
@@ -288,7 +288,7 @@ describe('fixtureGenerator', function() {
       };
 
       var knex = this.knex;
-      fixtureGenerator.create(dbConfig, dataConfig).then(function(results) {
+      this.fixtureGenerator.create(dataConfig).then(function(results) {
         expect(results.Users[0].username).to.eql('foo:bar');
 
         // verify the data made it into the database
@@ -308,7 +308,7 @@ describe('fixtureGenerator', function() {
         }
       };
 
-      fixtureGenerator.create(dbConfig, dataConfig, function(err, results) {
+      this.fixtureGenerator.create(dataConfig, function(err, results) {
         expect(err).to.be.undefined;
         expect(results.Users[0].username).to.eql('bob');
         done();

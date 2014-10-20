@@ -220,6 +220,18 @@ sqlFixtures.create(dbConfig, dataSpec) ...
 
 sqlFixtures opens a connection to your database using Knex and does not attempt to ever close it. You can close it yourself by calling `sqlFixtures.destroy(callback)`. `destroy` takes a callback and also returns a promise.
 
+# Creating an instance of sql-fixtures
+If you need Knex right away, you can create an instance of a sql-fixtures object
+
+```javascript
+  var sqlFixtures = require('sql-fixtures');
+  var fixtureCreator = new sqlFixtures(dbConfig);
+  // fixtureCreator.knex is now available and ready to go
+  fixtureCreator.create(dataSpec, callback); // like normal, minus the dbConfig argument
+```
+
+If you don't need this, ignore it, just use sql-fixtures in the normal fashion
+
 # Assumptions and Limitations
 
 * sql-fixtures assumes your tables have an "id" column which is that table's primary key. Any other primary key approach will not work.
