@@ -1,3 +1,7 @@
+0.1.10 - Oct 20, 2014
+-- Added alias for disconnect over to destroy, to maintain backwards compatibility
+   0.1.9 lacked disconnect, it got renamed to destroy.
+
 0.1.9 - Oct 20, 2014
 -- sql-fixtures can now be instantiated if need be, and also used same as before (see README for more info)
 

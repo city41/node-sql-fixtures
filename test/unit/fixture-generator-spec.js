@@ -47,4 +47,10 @@ describe('fixtureGenerator', function() {
       });
     });
   });
+
+  describe('disconnect alias', function() {
+    it('should be an alias to destroy', function() {
+      expect(fixtureGenerator.disconnect === fixtureGenerator.destroy).to.be.true;
+    });
+  });
 });
