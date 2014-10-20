@@ -19,7 +19,7 @@ gulp.task('test:unit', ['lint'], function() {
 
 gulp.task('reset:db', shell.task(
   [
-    'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "drop database testdb"',
+    'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "drop database if exists testdb"',
     'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "create database testdb with owner testdb"'
   ])
 );
