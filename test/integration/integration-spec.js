@@ -21,7 +21,7 @@ describe('FixtureGenerator', function() {
     knex.schema.createTable('Users', function(table) {
       table.increments('id').primary();
       table.string('username');
-      table.timestamp('createdAt').defaultTo(knex.raw('now()'));
+      table.timestamp('createdAt').notNullable().defaultTo(knex.raw('now()'));
     }).then(function() {
       knex.schema.createTable('Items', function(table) {
         table.increments('id').primary();
@@ -240,7 +240,8 @@ describe('FixtureGenerator', function() {
       it('should return the auto populated columns in the result', function(done) {
         var dataConfig = {
           Users: {
-            username: 'bob'
+            username: 'bob',
+            createdAt: null
           }
         };
 
