@@ -4,11 +4,13 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 # Supported Databases
 
-PostgreSQL, MySQL, MariaDB and sqlite
+**PostgreSQL** is the only database that works currently.
 
-Thanks to using [Knex.js](http:/www.knexjs.org) internally.
+**MySQL, MariaDB and sqlite** support is coming soon. Keep an eye on [this issue](https://github.com/city41/node-sql-fixtures/issues/9)
+for status on other databases. If you use these databases and want to help, that'd be awesome!
 
-**NOTE:** I've only used this on postgres 9.3, works great. If you use it on another database, please let me know how it goes.
+[Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working isn't hard. But currently
+a small assumption in how the data is created means only PostgreSQL works.
 
 # Install
 
@@ -134,6 +136,24 @@ var dataSpec = {
 ```
 
 Both of the above users will have the username "bob".
+
+## Auto populated columns
+If your tables have auto populated columns (example, a timestamp column), then that data is not returned by default in the result. If you need that column, specify it in your data config with a falsy value:
+
+```javascript
+var dataSpec = {
+  Users: {
+    username: 'need the timestamp',
+    // this will cause createdAt to be returned
+    createdAt: null
+  }
+}
+
+sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
+  console.log(result.Users[0].createdAt); // a date
+});
+
+```
 
 ## Arbitrary SQL
 
