@@ -239,14 +239,20 @@ describe('FixtureGenerator', function() {
     describe('auto populated columns', function() {
       it('should return the auto populated columns in the result', function(done) {
         var dataConfig = {
-          Users: {
-            username: 'bob',
-            createdAt: null
-          }
+          Users: [
+            {
+              username: 'bob',
+              createdAt: null
+            },
+            {
+              username: 'joe'
+            }
+          ]
         };
 
         this.fixtureGenerator.create(dataConfig).then(function(results) {
           expect(results.Users[0].createdAt).to.be.an.instanceOf(Date);
+          expect(results.Users[1]).to.not.have.property('createdAt');
           done();
         });
       });
