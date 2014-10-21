@@ -218,7 +218,15 @@ sqlFixtures.create(dbConfig, dataSpec) ...
 
 # Disconnecting from the database
 
-sqlFixtures opens a connection to your database using Knex and does not attempt to ever close it. You can close it yourself by calling `sqlFixtures.destroy(callback)`. `destroy` takes a callback and also returns a promise.
+sqlFixtures opens a connection to your database using Knex and does not attempt to ever close it. You can close it yourself by calling `sqlFixtures.disconnect(callback)`. `disconnect` takes a callback and also returns a promise.
+
+# Cleaning up and disconnecting from the database
+
+__Warning: Destructive__
+
+If you want to clean up the data added to the database in your `after` block, you can use the `destroy` method. This
+will __cascade truncate__ the tables sqlFixtures inserted data into before disconnecting from the database.
+`destroy` takes a callback and also returns a promise.
 
 # Creating an instance of sql-fixtures
 If you need Knex right away, you can create an instance of a sql-fixtures object
