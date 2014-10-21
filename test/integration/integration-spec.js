@@ -83,7 +83,13 @@ describe('FixtureGenerator', function() {
       var dataConfig = {
         Users: {
           username: 'bob'
-        }
+        },
+        Items: [
+          {
+            name: "bob's item",
+            userId: 'Users:0'
+          }
+        ]
       };
 
       var originalConfig = _.cloneDeep(dataConfig);
