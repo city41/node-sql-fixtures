@@ -234,6 +234,23 @@ describe('FixtureGenerator', function() {
           });
         });
       });
+
+      it('should allow raw sql in a column', function(done) {
+        var knex = this.fixtureGenerator.knex;
+
+        var dataConfig = {
+          Users: [
+            {
+              username: knex.raw('?', ['bob'])
+            }
+          ]
+        };
+
+        this.fixtureGenerator.create(dataConfig).then(function(results) {
+          expect(results.Users[0].username).to.equal('bob');
+          done();
+        });
+      });
     });
 
     describe('auto populated columns', function() {
