@@ -26,7 +26,7 @@ describe('FixtureGenerator', function() {
       knex.schema.createTable('Items', function(table) {
         table.increments('id').primary();
         table.string('name');
-        table.integer('userId').references('id').inTable('Users');
+        table.integer('userId').references('id').inTable('Users').onDelete('CASCADE');
       }).then(function() {
         knex.schema.createTable('Comments', function(table) {
           table.increments('id').primary();
@@ -34,12 +34,12 @@ describe('FixtureGenerator', function() {
           table.integer('userId');
           table.integer('itemId');
           table.integer('parentId');
-          table.integer('createdById').references('id').inTable('Users');
+          table.integer('createdById').references('id').inTable('Users').onDelete('CASCADE');
         }).then(function() {
           knex.schema.createTable('LikeVotes', function(table) {
             table.increments('id').primary();
-            table.integer('commentId').references('id').inTable('Comments');
-            table.integer('createdById').references('id').inTable('Users');
+            table.integer('commentId').references('id').inTable('Comments').onDelete('CASCADE');
+            table.integer('createdById').references('id').inTable('Users').onDelete('CASCADE');
           }).then(function() {
             done();
           });
