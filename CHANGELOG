@@ -1,3 +1,6 @@
+0.2.1 - Oct 22, 2014
+-- bug fix: only cloning what is being mutated, so knex raw objects don't get wiped out
+
 0.2.0 - Oct 21, 2014
 -- the only columns returned in the result are those that are specified
 
