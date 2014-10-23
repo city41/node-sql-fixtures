@@ -345,4 +345,29 @@ describe('FixtureGenerator', function() {
       });
     });
   });
+
+  describe('reusing the instance', function() {
+    it('should reconnect after a destroy', function(done) {
+      var dataConfig = {
+        Users: {
+          username: 'bob'
+        }
+      };
+
+      var fixtureGenerator = this.fixtureGenerator;
+
+      fixtureGenerator.create(dataConfig, function(err, results) {
+        expect(err).to.be.undefined;
+        expect(results.Users[0].username).to.eql('bob');
+
+        fixtureGenerator.destroy(function() {
+          fixtureGenerator.create(dataConfig, function(err, results) {
+            expect(err).to.be.undefined;
+            expect(results.Users[0].username).to.eql('bob');
+            done();
+          });
+        });
+      });
+    });
+  });
 });
