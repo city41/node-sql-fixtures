@@ -1,3 +1,7 @@
+0.3.1 - Oct 27, 2014
+-- Tiny branch depending on db dialect, keeps postgres rock solid and does the best it can with other dbs
+   (basically postgres will return what got inserted, mysql/sqlite/etc do not, so have to make a slight guess with those dbs)
+
 0.3.0 - Oct 27, 2014
 -- Added integration tests for sqlite, feeling pretty good about sqlite support
 
