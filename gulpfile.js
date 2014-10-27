@@ -18,20 +18,34 @@ gulp.task('test:unit', ['lint'], function() {
     .pipe(mocha());
 });
 
-gulp.task('reset:db', shell.task(
-  [
+gulp.task('reset:db', shell.task([
     'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "drop database if exists testdb"',
     'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "create database testdb with owner testdb"'
   ])
 );
 
-gulp.task('test:integration', ['lint', 'reset:db'], function() {
+gulp.task('test:integration:postgres', ['reset:db'], function() {
   return gulp.src([
     './test/helpers/*.js',
-    './test/integration/*.js'
+    './test/integration/postgres*.js'
   ])
     .pipe(mocha());
 });
+
+gulp.task('delete:sqlite', shell.task(['rm -f ./sqlite-integration-spec.db']));
+
+gulp.task('test:integration:sqlite', ['delete:sqlite'], function() {
+  return gulp.src([
+    './test/helpers/*.js',
+    './test/integration/sqlite*.js'
+  ])
+  .pipe(mocha());
+});
+
+gulp.task('test:integration', [
+  'test:integration:sqlite',
+  'test:integration:postgres'
+])
 
 gulp.task('test', [
   'lint',

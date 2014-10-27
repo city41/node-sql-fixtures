@@ -1,3 +1,6 @@
+0.3.0 - Oct 27, 2014
+-- Added integration tests for sqlite, feeling pretty good about sqlite support
+
 0.2.2 - Oct 23, 2014
 -- bug fix: allowing more than one instance of sqlFixtures to get generated
 

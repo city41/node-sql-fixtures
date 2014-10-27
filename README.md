@@ -4,13 +4,16 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 # Supported Databases
 
-**PostgreSQL** is the only database that works currently.
+| Database  | Works?   | As of version | Details                                                         |
+|-----------|----------|---------------|-----------------------------------------------------------------|
+| Postgres  | Yes      | 0.0.0         | Integration tests and two known projects using it (using 9.3)   |
+| sqlite3   | Probably | 0.3.0         | Integration tests for sqlite exist, but no known usage. If you use sql-fixtures with sqlite, let us know how it's going |
+| MySQL     | Unknown  | ?             | No integration tests, unknown how well it works. If you are a MySQL user and want to help, that'd be great |
+| MariaDB   | Unknown  | ?             | No integration tests, unknown how well it works. If you are a Maria user and want to help, that'd be great |
 
-**MySQL, MariaDB and sqlite** support is coming soon. Keep an eye on [this issue](https://github.com/city41/node-sql-fixtures/issues/9)
-for status on other databases. If you use these databases and want to help, that'd be awesome!
+[this issue](https://github.com/city41/node-sql-fixtures/issues/9) is tracking database support progress.
 
-[Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working isn't hard. But currently
-a small assumption in how the data is created means only PostgreSQL works.
+[Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working shouldn't be too hard.
 
 # Install
 

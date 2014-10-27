@@ -29,3 +29,4 @@ node_modules
 .DS_Store
 README.html
 .vagrant
+sqlite-integration-spec.db

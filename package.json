@@ -1,6 +1,6 @@
 {
   "name": "sql-fixtures",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Populate a SQL database with fixture data",
   "main": "index.js",
   "scripts": {
@@ -46,6 +46,7 @@
     "gulp-mocha": "^1.1.0",
     "gulp-shell": "^0.2.9",
     "mocha": "^1.21.4",
-    "pg": "^3.4.4"
+    "pg": "^3.4.4",
+    "sqlite3": "^3.0.2"
   }
 }
