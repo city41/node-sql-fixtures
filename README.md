@@ -11,8 +11,6 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 | MySQL     | Probably | 0.4.0         | Integration tests for MySQL exist, but no known usage. If you are using sql-fixtures with MySQL, let me know how it's going |
 | MariaDB   | Unknown  | ?             | No integration tests, unknown how well it works. If you are a Maria user and want to help, that'd be great |
 
-[this issue](https://github.com/city41/node-sql-fixtures/issues/9) is tracking database support progress.
-
 [Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working shouldn't be too hard.
 
 # Install
