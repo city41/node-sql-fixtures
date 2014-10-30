@@ -7,8 +7,8 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 | Database  | Works?   | As of version | Details                                                         |
 |-----------|----------|---------------|-----------------------------------------------------------------|
 | Postgres  | Yes      | 0.0.0         | Integration tests and two known projects using it (using 9.3)   |
-| sqlite3   | Probably | 0.3.0         | Integration tests for sqlite exist, but no known usage. If you use sql-fixtures with sqlite, let us know how it's going |
-| MySQL     | Unknown  | ?             | No integration tests, unknown how well it works. If you are a MySQL user and want to help, that'd be great |
+| sqlite3   | Probably | 0.3.0         | Integration tests for sqlite exist, but no known usage. If you use sql-fixtures with sqlite, let me know how it's going |
+| MySQL     | Probably | 0.4.0         | Integration tests for MySQL exist, but no known usage. If you are using sql-fixtures with MySQL, let me know how it's going |
 | MariaDB   | Unknown  | ?             | No integration tests, unknown how well it works. If you are a Maria user and want to help, that'd be great |
 
 [this issue](https://github.com/city41/node-sql-fixtures/issues/9) is tracking database support progress.
@@ -266,14 +266,4 @@ Please fork and send pull requests in the typical fashion.
 
 There are both unit and integration tests. The unit tests are invoked with `gulp test:unit`.
 
-## Integration tests
-
-The integration tests use PostgreSQL. Vagrant is used to bring up a pg server.
-
-```
-vagrant up
-gulp test:integration
-vagrant halt (or destroy)
-```
-
-`gulp test` will run both unit and integration tests
+Checkout integrationTests.md for the scoop on the integration tests.

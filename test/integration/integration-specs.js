@@ -8,33 +8,33 @@ module.exports = function(dbConfig) {
     before(function(done) {
       this.fixtureGenerator = new FixtureGenerator(dbConfig);
       var knex = this.knex = this.fixtureGenerator.knex;
-      knex.schema.createTable('Users', function(table) {
+      knex.schema.createTable('users', function(table) {
         table.increments('id').primary();
         table.string('username');
-        table.string('autoPopulatedColumn').notNullable().defaultTo('autopopulated');
+        table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
       }).then(function() {
-        knex.schema.createTable('Items', function(table) {
+        knex.schema.createTable('items', function(table) {
           table.increments('id').primary();
           table.string('name');
-          table.integer('userId').references('id').inTable('Users');
+          table.integer('user_id');
         }).then(function() {
-          knex.schema.createTable('Comments', function(table) {
+          knex.schema.createTable('comments', function(table) {
             table.increments('id').primary();
             table.string('comment');
-            table.integer('userId');
-            table.integer('itemId');
-            table.integer('parentId');
-            table.integer('createdById').references('id').inTable('Users');
+            table.integer('user_id');
+            table.integer('item_id');
+            table.integer('parent_id');
+            table.integer('created_by_id');
           }).then(function() {
-            knex.schema.createTable('LikeVotes', function(table) {
+            knex.schema.createTable('like_votes', function(table) {
               table.increments('id').primary();
-              table.integer('commentId').references('id').inTable('Comments');
-              table.integer('createdById').references('id').inTable('Users');
+              table.integer('commentId');
+              table.integer('created_by_id');
             }).then(function() {
-              knex.schema.createTable('HasNoIdColumn', function(table) {
-                table.integer('foreignAId');
-                table.integer('foreignBId');
-                table.string('autoPopulatedColumn').notNullable().defaultTo('autopopulated');
+              knex.schema.createTable('has_no_id_column', function(table) {
+                table.integer('foreign_a_id');
+                table.integer('foreign_b_id');
+                table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
               }).then(function() {
                 done();
               });
@@ -51,25 +51,25 @@ module.exports = function(dbConfig) {
     describe("generating fixtures", function() {
       it('should create a fixture with dependencies resolved', function(done) {
         var dataConfig = {
-          Users: {
+          users: {
             username: 'bob'
           },
-          Items: {
+          items: {
             name: "bob's item",
-            userId: 'Users:0'
+            user_id: 'users:0'
           }
         };
 
         var knex = this.knex;
 
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Users[0].username).to.eql('bob');
-          expect(results.Users[0].specId).to.be.undefined;
-          expect(results.Items[0].userId).to.eql(results.Users[0].id);
-          expect(results.Items[0].specId).to.be.undefined;
+          expect(results.users[0].username).to.eql('bob');
+          expect(results.users[0].specId).to.be.undefined;
+          expect(results.items[0].user_id).to.eql(results.users[0].id);
+          expect(results.items[0].specId).to.be.undefined;
 
           // verify the data made it into the database
-          knex('Users').where('id', results.Users[0].id).then(function(result) {
+          knex('users').where('id', results.users[0].id).then(function(result) {
             expect(result[0].username).to.eql('bob');
             done();
           });
@@ -78,13 +78,13 @@ module.exports = function(dbConfig) {
 
       it('should leave the passed in data spec alone', function() {
         var dataConfig = {
-          Users: {
+          users: {
             username: 'bob'
           },
-          Items: [
+          items: [
             {
               name: "bob's item",
-              userId: 'Users:0'
+              user_id: 'users:0'
             }
           ]
         };
@@ -92,41 +92,41 @@ module.exports = function(dbConfig) {
         var originalConfig = _.cloneDeep(dataConfig);
 
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Users[0].username).to.eql('bob');
+          expect(results.users[0].username).to.eql('bob');
           expect(originalConfig).to.eql(dataConfig);
         });
       });
 
       it('should properly deal with same types at different priorities', function(done) {
         var dataConfig = {
-          Users: [{
+          users: [{
             username: 'bob'
           }, {
-            username: "Items:0:name"
+            username: "items:0:name"
           }],
-          Items: {
+          items: {
             name: "bob's item",
-            userId: 'Users:0'
+            user_id: 'users:0'
           }
         };
 
         var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Users[0].id).to.be.a.number;
-          expect(results.Users[1].id).to.be.a.number;
-          expect(results.Items[0].id).to.be.a.number;
+          expect(results.users[0].id).to.be.a.number;
+          expect(results.users[1].id).to.be.a.number;
+          expect(results.items[0].id).to.be.a.number;
 
-          expect(results.Users[0].username).to.eql('bob');
-          expect(results.Users[1].username).to.eql("bob's item");
-          expect(results.Items[0].name).to.eql("bob's item");
-          expect(results.Items[0].userId).to.eql(results.Users[0].id);
+          expect(results.users[0].username).to.eql('bob');
+          expect(results.users[1].username).to.eql("bob's item");
+          expect(results.items[0].name).to.eql("bob's item");
+          expect(results.items[0].user_id).to.eql(results.users[0].id);
 
           // verify the data made it into the database
-          knex('Users').whereIn('id', [results.Users[0].id, results.Users[1].id]).then(function(result) {
+          knex('users').whereIn('id', [results.users[0].id, results.users[1].id]).then(function(result) {
             expect(result[0].username).to.eql('bob');
             expect(result[1].username).to.eql("bob's item");
 
-            knex('Items').where('id', results.Items[0].id).then(function(result) {
+            knex('items').where('id', results.items[0].id).then(function(result) {
               expect(result[0].name).to.eql("bob's item");
               done();
             });
@@ -136,41 +136,41 @@ module.exports = function(dbConfig) {
 
       it('should properly resolve same types at different priorities', function(done) {
         var dataConfig = {
-          Users: [
+          users: [
             { username: "bob" }
           ],
-          Comments: [{
+          comments: [{
             comment: 'comment 1',
-            createdById: "Users:0",
-            userId: "Users:0"
+            created_by_id: "users:0",
+            user_id: "users:0"
           }, {
             comment: 'child of 1',
-            createdById: "Users:0",
-            userId: "Users:0",
-            parentId: "Comments:0"
+            created_by_id: "users:0",
+            user_id: "users:0",
+            parent_id: "comments:0"
           }],
-          LikeVotes: [{
-            commentId: "Comments:0",
-            createdById: "Users:0"
+          like_votes: [{
+            commentId: "comments:0",
+            created_by_id: "users:0"
           }, {
-             commentId: "Comments:1",
-             createdById: "Users:0"
+             commentId: "comments:1",
+             created_by_id: "users:0"
           }]
         };
 
         var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Comments[1].parentId).to.be.a('number');
-          expect(results.Comments[1].parentId).to.eql(results.Comments[0].id);
+          expect(results.comments[1].parent_id).to.be.a('number');
+          expect(results.comments[1].parent_id).to.eql(results.comments[0].id);
 
-          expect(results.LikeVotes[1].commentId).to.be.a('number');
-          expect(results.LikeVotes[1].commentId).to.eql(results.Comments[1].id);
+          expect(results.like_votes[1].commentId).to.be.a('number');
+          expect(results.like_votes[1].commentId).to.eql(results.comments[1].id);
 
-          expect(results.LikeVotes[1].createdById).to.be.a('number');
-          expect(results.LikeVotes[1].createdById).to.eql(results.Users[0].id);
+          expect(results.like_votes[1].created_by_id).to.be.a('number');
+          expect(results.like_votes[1].created_by_id).to.eql(results.users[0].id);
 
-          knex('LikeVotes').where('id', results.LikeVotes[1].id).then(function(result) {
-            expect(result[0].commentId).to.eql(results.Comments[1].id);
+          knex('like_votes').where('id', results.like_votes[1].id).then(function(result) {
+            expect(result[0].commentId).to.eql(results.comments[1].id);
             done();
           });
         });
@@ -178,34 +178,34 @@ module.exports = function(dbConfig) {
 
       // this spec asserts that issue #5 is resolved
       // in the below, the prioritization ends up moving the comments around
-      // and so before the fix, results.Comments[0] is what the user expected to
-      // find at results.Comments[1]
+      // and so before the fix, results.comments[0] is what the user expected to
+      // find at results.comments[1]
       it('should properly resolve dependencies that might move around', function(done) {
         var dataConfig = {
-          Users: [{
+          users: [{
             username: 'bob'
           }, {
             username: 'sally'
           }],
-          Items: [{
+          items: [{
             name: 'item 1',
-            userId: 'Users:0'
+            user_id: 'users:0'
           }],
-          Comments: [{
-            createdById: "Users:0",
-            itemId: "Items:0",
+          comments: [{
+            created_by_id: "users:0",
+            item_id: "items:0",
             comment: "comment on challenge"
           }, {
-            createdById: "Users:0",
-            userId: "Users:1",
+            created_by_id: "users:0",
+            user_id: "users:1",
             comment: "comment on user 1's wall"
           }]
         };
 
         var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Comments[1].comment).to.eql("comment on user 1's wall");
-          expect(results.Comments[1].userId).to.eql(results.Users[1].id);
+          expect(results.comments[1].comment).to.eql("comment on user 1's wall");
+          expect(results.comments[1].user_id).to.eql(results.users[1].id);
           done();
         });
       });
@@ -213,29 +213,29 @@ module.exports = function(dbConfig) {
       describe("tables without an id column", function() {
         it('should create rows for tables without an id column', function(done) {
           var dataConfig = {
-            HasNoIdColumn: [{
-              foreignAId: 2,
-              foreignBId: 3,
-              autoPopulatedColumn: null
+            has_no_id_column: [{
+              foreign_a_id: 2,
+              foreign_b_id: 3,
+              auto_populated_column: null
             }, {
-              foreignAId: 5,
-              foreignBId: 6
+              foreign_a_id: 5,
+              foreign_b_id: 6
             }]
           };
 
           var knex = this.knex;
 
           this.fixtureGenerator.create(dataConfig).then(function(results) {
-            expect(results.HasNoIdColumn[0].foreignAId).to.eql(2);
-            expect(results.HasNoIdColumn[0].foreignBId).to.eql(3);
-            expect(results.HasNoIdColumn[0].autoPopulatedColumn).to.eql("autopopulated");
-            expect(results.HasNoIdColumn[1].foreignAId).to.eql(5);
-            expect(results.HasNoIdColumn[1].foreignBId).to.eql(6);
-            expect(results.HasNoIdColumn[1]).to.not.have.property('autoPopulatedColumn');
+            expect(results.has_no_id_column[0].foreign_a_id).to.eql(2);
+            expect(results.has_no_id_column[0].foreign_b_id).to.eql(3);
+            expect(results.has_no_id_column[0].auto_populated_column).to.eql("autopopulated");
+            expect(results.has_no_id_column[1].foreign_a_id).to.eql(5);
+            expect(results.has_no_id_column[1].foreign_b_id).to.eql(6);
+            expect(results.has_no_id_column[1]).to.not.have.property('auto_populated_column');
 
-            knex('HasNoIdColumn').where('foreignAId', 2).then(function(knexResult) {
-              expect(knexResult[0].foreignBId).to.eql(3);
-              expect(knexResult[0].autoPopulatedColumn).to.eql("autopopulated");
+            knex('has_no_id_column').where('foreign_a_id', 2).then(function(knexResult) {
+              expect(knexResult[0].foreign_b_id).to.eql(3);
+              expect(knexResult[0].auto_populated_column).to.eql("autopopulated");
               done();
             });
           });
@@ -245,25 +245,25 @@ module.exports = function(dbConfig) {
       describe("invoking raw sql", function() {
         it("should invoke raw sql", function(done) {
           var dataConfig = {
-            Users: [{
+            users: [{
               username: 'bob'
             }, {
               username: 'sally'
             }],
             sql: [
-              'insert into "Items" ("name", "userId") values (\'rawsql0\', {Users:0})',
-              'insert into "Items" ("name", "userId") values (\'rawsql1\', {Users:1})'
+              'insert into items (name, user_id) values (\'rawsql0\', {users:0})',
+              'insert into items (name, user_id) values (\'rawsql1\', {users:1})'
             ]
           };
 
           var knex = this.knex;
           this.fixtureGenerator.create(dataConfig).then(function(results) {
-            expect(results.Users.length).to.eql(2);
-            expect(results.Items).to.be.undefined;
-            knex('Items').where('name', 'rawsql0').then(function(knexResult) {
-              expect(knexResult[0].userId).to.eql(results.Users[0].id);
-              knex('Items').where('name', 'rawsql1').then(function(knexResult) {
-                expect(knexResult[0].userId).to.eql(results.Users[1].id);
+            expect(results.users.length).to.eql(2);
+            expect(results.items).to.be.undefined;
+            knex('items').where('name', 'rawsql0').then(function(knexResult) {
+              expect(knexResult[0].user_id).to.eql(results.users[0].id);
+              knex('items').where('name', 'rawsql1').then(function(knexResult) {
+                expect(knexResult[0].user_id).to.eql(results.users[1].id);
                 done();
               });
             });
@@ -274,7 +274,7 @@ module.exports = function(dbConfig) {
           var knex = this.fixtureGenerator.knex;
 
           var dataConfig = {
-            Users: [
+            users: [
               {
                 username: knex.raw('?', ['bob'])
               }
@@ -282,7 +282,7 @@ module.exports = function(dbConfig) {
           };
 
           this.fixtureGenerator.create(dataConfig).then(function(results) {
-            expect(results.Users[0].username).to.equal('bob');
+            expect(results.users[0].username).to.equal('bob');
             done();
           });
         });
@@ -291,10 +291,10 @@ module.exports = function(dbConfig) {
       describe('auto populated columns', function() {
         it('should return the auto populated columns in the result', function(done) {
           var dataConfig = {
-            Users: [
+            users: [
               {
                 username: 'bob',
-                autoPopulatedColumn: null
+                auto_populated_column: null
               },
               {
                 username: 'joe'
@@ -303,8 +303,8 @@ module.exports = function(dbConfig) {
           };
 
           this.fixtureGenerator.create(dataConfig).then(function(results) {
-            expect(results.Users[0].autoPopulatedColumn).to.eql('autopopulated');
-            expect(results.Users[1]).to.not.have.property('autoPopulatedColumn');
+            expect(results.users[0].auto_populated_column).to.eql('autopopulated');
+            expect(results.users[1]).to.not.have.property('auto_populated_column');
             done();
           });
         });
@@ -314,23 +314,23 @@ module.exports = function(dbConfig) {
     describe('spec ids', function() {
       it('should resolved spec ids', function(done) {
         var dataConfig = {
-          Users: {
+          users: {
             specId: 'myUser',
             username: 'bob'
           },
-          Items: {
+          items: {
             name: "bob's item",
-            userId: 'Users:myUser'
+            user_id: 'users:myUser'
           }
         };
 
         var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Users[0].username).to.eql('bob');
-          expect(results.Items[0].userId).to.eql(results.Users[0].id);
+          expect(results.users[0].username).to.eql('bob');
+          expect(results.items[0].user_id).to.eql(results.users[0].id);
 
           // verify the data made it into the database
-          knex('Users').where('id', results.Users[0].id).then(function(result) {
+          knex('users').where('id', results.users[0].id).then(function(result) {
             expect(result[0].username).to.eql('bob');
             done();
           });
@@ -341,17 +341,17 @@ module.exports = function(dbConfig) {
     describe('escaping', function() {
       it('should unescape colons', function(done) {
         var dataConfig = {
-          Users: {
+          users: {
             username: 'foo::bar'
           }
         };
 
         var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
-          expect(results.Users[0].username).to.eql('foo:bar');
+          expect(results.users[0].username).to.eql('foo:bar');
 
           // verify the data made it into the database
-          knex('Users').where('id', results.Users[0].id).then(function(result) {
+          knex('users').where('id', results.users[0].id).then(function(result) {
             expect(result[0].username).to.eql('foo:bar');
             done();
           });
@@ -362,14 +362,14 @@ module.exports = function(dbConfig) {
     describe('calling the callback', function() {
       it('should call the callback if provided', function(done) {
         var dataConfig = {
-          Users: {
+          users: {
             username: 'bob'
           }
         };
 
         this.fixtureGenerator.create(dataConfig, function(err, results) {
           expect(err).to.be.undefined;
-          expect(results.Users[0].username).to.eql('bob');
+          expect(results.users[0].username).to.eql('bob');
           done();
         });
       });
@@ -378,7 +378,7 @@ module.exports = function(dbConfig) {
     describe('reusing the instance', function() {
       it('should reconnect after a destroy', function(done) {
         var dataConfig = {
-          Users: {
+          users: {
             username: 'bob'
           }
         };
@@ -387,12 +387,12 @@ module.exports = function(dbConfig) {
 
         fixtureGenerator.create(dataConfig, function(err, results) {
           expect(err).to.be.undefined;
-          expect(results.Users[0].username).to.eql('bob');
+          expect(results.users[0].username).to.eql('bob');
 
           fixtureGenerator.destroy(function() {
             fixtureGenerator.create(dataConfig, function(err, results) {
               expect(err).to.be.undefined;
-              expect(results.Users[0].username).to.eql('bob');
+              expect(results.users[0].username).to.eql('bob');
               done();
             });
           });
