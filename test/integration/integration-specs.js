@@ -210,6 +210,22 @@ module.exports = function(dbConfig) {
         });
       });
 
+      it("should insert records in the same order as defined in the spec", function(done) {
+        var dataConfig = {
+          users: []
+        };
+        for (var i = 0; i < 20; ++i) {
+          dataConfig.users.push({username: "user" + i});
+        }
+
+        this.fixtureGenerator.create(dataConfig).then(function(results) {
+          for (var i = 1; i < results.users.length; ++i) {
+            expect(results.users[i].id).to.be.greaterThan(results.users[i-1].id);
+          }
+          done();
+        });
+      });
+
       describe("tables without an id column", function() {
         it('should create rows for tables without an id column', function(done) {
           var dataConfig = {

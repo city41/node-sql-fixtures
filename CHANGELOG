@@ -1,3 +1,8 @@
+0.4.1 - Oct 31, 2014
+-- Before MySQL and sqlite worked (< 0.3.0), inserts were done in bulk, and that meant primary keys ascended in a predictable manner.
+   From 0.3.0 on, inserts were done one at a time and in parallel, removing the predictable id ordering. 0.4.1 changes it to
+   insert records serially to bring back that predictable ordering at the cost of sql-fixtures being slightly slower.
+
 0.4.0 - Oct 30, 2014
 -- Added integration tests for MySQL
 
