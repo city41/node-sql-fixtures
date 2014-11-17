@@ -18,18 +18,7 @@ gulp.task('test:unit', ['lint'], function() {
     .pipe(mocha());
 });
 
-gulp.task('reset:db:postgres', shell.task([
-    'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "drop database if exists testdb"',
-    'PGUSER=testdb PGPASSWORD=password psql -h localhost -p 15432 postgres -c "create database testdb with owner testdb"'
-  ])
-);
-
-gulp.task('reset:db:mysql', shell.task([
-    'mysql -h 192.168.59.103 -u admin -ppassword -e "drop database if exists testdb; create database testdb;"'
-  ])
-);
-
-gulp.task('test:integration:postgres', ['reset:db:postgres'], function() {
+gulp.task('test:integration:postgres', function() {
   return gulp.src([
     './test/helpers/*.js',
     './test/integration/postgres*.js'
@@ -37,7 +26,7 @@ gulp.task('test:integration:postgres', ['reset:db:postgres'], function() {
     .pipe(mocha());
 });
 
-gulp.task('test:integration:mysql', ['reset:db:mysql'], function() {
+gulp.task('test:integration:mysql', function() {
   return gulp.src([
     './test/helpers/*.js',
     './test/integration/mysql*.js'

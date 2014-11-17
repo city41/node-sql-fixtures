@@ -4,11 +4,11 @@ describe("mysql intregation tests", function() {
   specs({
     client: 'mysql',
     connection: {
-      host: '192.168.59.103',
-      user: 'admin',
+      host: process.env.DOCKER_HOST || 'mysql',
+      user: 'testdb',
       password: 'password',
       database: 'testdb',
-      port: 3306
+      port: process.env.DOCKER_PORT || 3306
     }
   });
 });

@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var bluebird = require('bluebird');
 var FixtureGenerator = require('../../lib/fixture-generator');
 
 module.exports = function(dbConfig) {
@@ -7,36 +8,48 @@ module.exports = function(dbConfig) {
 
     before(function(done) {
       this.fixtureGenerator = new FixtureGenerator(dbConfig);
+
       var knex = this.knex = this.fixtureGenerator.knex;
-      knex.schema.createTable('users', function(table) {
-        table.increments('id').primary();
-        table.string('username');
-        table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
-      }).then(function() {
-        knex.schema.createTable('items', function(table) {
+
+      var dropPromises = [
+        knex.schema.dropTableIfExists('users'),
+        knex.schema.dropTableIfExists('items'),
+        knex.schema.dropTableIfExists('comments'),
+        knex.schema.dropTableIfExists('like_votes'),
+        knex.schema.dropTableIfExists('has_no_id_column')
+      ];
+
+      bluebird.all(dropPromises).then(function() {
+        knex.schema.createTable('users', function(table) {
           table.increments('id').primary();
-          table.string('name');
-          table.integer('user_id');
+          table.string('username');
+          table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
         }).then(function() {
-          knex.schema.createTable('comments', function(table) {
+          knex.schema.createTable('items', function(table) {
             table.increments('id').primary();
-            table.string('comment');
+            table.string('name');
             table.integer('user_id');
-            table.integer('item_id');
-            table.integer('parent_id');
-            table.integer('created_by_id');
           }).then(function() {
-            knex.schema.createTable('like_votes', function(table) {
+            knex.schema.createTable('comments', function(table) {
               table.increments('id').primary();
-              table.integer('commentId');
+              table.string('comment');
+              table.integer('user_id');
+              table.integer('item_id');
+              table.integer('parent_id');
               table.integer('created_by_id');
             }).then(function() {
-              knex.schema.createTable('has_no_id_column', function(table) {
-                table.integer('foreign_a_id');
-                table.integer('foreign_b_id');
-                table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
+              knex.schema.createTable('like_votes', function(table) {
+                table.increments('id').primary();
+                table.integer('commentId');
+                table.integer('created_by_id');
               }).then(function() {
-                done();
+                knex.schema.createTable('has_no_id_column', function(table) {
+                  table.integer('foreign_a_id');
+                  table.integer('foreign_b_id');
+                  table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
+                }).then(function() {
+                  done();
+                });
               });
             });
           });

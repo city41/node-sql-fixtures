@@ -4,11 +4,11 @@ describe("postgres intregation tests", function() {
   specs({
     client: 'pg',
     connection: {
-      host: 'localhost',
+      host: process.env.DOCKER_HOST || 'pg',
       user: 'testdb',
       password: 'password',
       database: 'testdb',
-      port: 15432
+      port: process.env.DOCKER_PORT || 5432
     }
   });
 });

@@ -8,44 +8,38 @@ It is located at `test/integration`. The actual specs live in `integration-specs
 
 sqlite is your friend, `gulp test:integration:sqlite` is a quick easy way to run tests that hit an actual database. It should require no setup, just call it.
 
-## Setting up Postgres
+## Running Postgres and MySQL integration tests using Docker and Fig
 
-The postgres databse is handled via Vagrant. This should be temporary and it should be a Docker container soon, when I get a chance to make the switch.
+Docker containers provide the database engines. Getting these running is not too bad, but will take a while the first time.
 
-To run the postgres tests:
+1. [Install Fig](http://www.fig.sh/install.html) -- these instructions also show how to install Docker, which you will also need.
+  * If you are on OSX, run `$(boot2docker shellinit)` to get your shell set up to talk with the Docker VM
+1. from the root of sql-fixtures, run `fig up`
+  * go get some coffee, this will take a long time the first time
+  * You should see a lot of output, including running all the tests
 
-1. Install [Vagrant](https://www.vagrantup.com/)
-  * You probably need [VirtualBox too](https://www.virtualbox.org/)
-1. Sadly you will need a `psql` installed on your main box as well. That's generally done by installing Postgres for your OS. I hope to remove this dependency, as it sucks.
-1. `vagrant up`
-  * This can take a while the first time, but should succeed
-1. `gulp test:integration:postgres`
-1. `vagrant halt` (or `vagrant destroy`)
+## Running the tests ad hoc
 
+For example, to just run the postgres tests: `fig run node gulp test:integration:postgres`
 
-## MySQL
+This will spin up Docker containers as needed then run the postgres integration tests inside the Node container.
 
-MySQL is setup via Docker. Here's what you need to do
+Fig will spin up a new container, run the command, then leave the container hanging around. To delete it do `docker rm <container id>`, and you can get the id from `docker ps -a`. If you just want to clean up all containers, then `docker rm $(docker ps -q -a)`
 
-1. Install `mysql` on your main box
-1. `git submodule init`
-1. Install [Docker](https://docs.docker.com/installation/) for your OS
-1. start up docker (and boot2docker if needed)
-1. `docker build -t tutum/mysql docker/mysql/5.5/`
-1. `docker run -d -p 3306:3306 -e MYSQL_PASS="password" tutum/mysql`
-1. `gulp test:integration:mysql`
+## Cleaning things up
 
-To stop docker
+To clean up the containers Fig is managing: `fig stop && fig rm`
 
-1. `docker ps` -- find the id of the mysql container
-2. `docker stop <the id>`
+To clean up all Docker containers: `docker rm $(docker ps -q -a)`
 
-## TODO
+## Debugging with node-inspector
 
-1. Don't require mysql and postgres to be installed on the main box [#13](https://github.com/city41/node-sql-fixtures/issues/13)
-1. Switch Postgres over to Docker [#12](https://github.com/city41/node-sql-fixtures/issues/12)
-1. Automate starting Docker containers
+To do this, you need to run the db you're working with inside Docker, and the tests outside of Docker.
 
-## Not feeling this madness?
-
-I understand, it's a lot to ask to set all this up. But if you are hacking on sql-fixtures, at the very least please run `gulp test:integration:sqlite` and `gulp test:unit`, that should be painless and easy. I can ensure MySql and Postgres are happy before cutting a new release.
+1. fig up -d <pg or mysql>
+1. `node-inspector`
+1. `DOCKER_HOST=<host ip> DOCKER_PORT=<port> node --debug-brk $(which gulp) test:integration:<postgres or mysql>`
+  * where ...
+    * DOCKER_HOST is `localhost` on linux or whatever `boot2docker ip` tells you for OSX
+    * DOCKER_PORT is `15432` for postgres or `13306` for mysql
+1. Head to node-inspector and debug as usual.
