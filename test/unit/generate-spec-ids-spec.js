@@ -61,5 +61,24 @@ describe('generate-spec-ids', function() {
       var expectedSql = 'foo {Users:' + user0SpecId +'} {Users:' + user0SpecId +'} {Users:' + user1SpecId + '}';
       expect(generated.sql).to.eql(expectedSql);
     });
+
+    it('should generate ids for array values', function() {
+      var config = {
+        has_integer: [{
+          integer: 9
+        }],
+        needs_integer: [{
+          integers: ['has_integer:0:integer', 4]
+        }]
+      };
+
+      var generated = generateSpecIds(config);
+
+      var expectedSpecId = generated.has_integer[0].specId;
+      expect(generated.needs_integer[0].integers).to.eql([
+        'has_integer:' + expectedSpecId + ':integer',
+        4
+      ]);
+    });
   });
 });

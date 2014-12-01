@@ -1,3 +1,6 @@
+0.5.0 - Dec 1, 2014
+-- added support for Postgres array columns
+
 0.4.2 - Dec 1, 2014
 -- Postgres now inserts in bulk again for a nice speed up. MySQL and Sqlite also insert in bulk now, but they must then serially query the database to retrieve what was inserted.
 -- clean up: integration tests are cleaner, and use more generic/test appropriate database tables

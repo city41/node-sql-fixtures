@@ -92,6 +92,25 @@ describe('resolve-dependencies', function() {
     expect(resolved.sql[0]).to.eql('foo 6 6');
   });
 
+  it('should resolve arrays', function() {
+    var toBeResolved = {
+      needs_integer: [{
+        integers: ['has_integer:hi0:integer', 5]
+      }]
+    };
+
+    var previouslyResolved = {
+      has_integer: [{
+        id: 6,
+        specId: 'hi0',
+        integer: 7
+      }]
+    };
+
+    var resolved = resolveDependencies(previouslyResolved, toBeResolved);
+    expect(resolved.needs_integer[0].integers).to.eql([7, 5]);
+  });
+
   describe('spec ids', function() {
     it('should resolve the spec id', function() {
       var toBeResolved = {

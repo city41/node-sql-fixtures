@@ -205,6 +205,22 @@ var dataSpec = {
 };
 ```
 
+## Array columns (Postgres only)
+
+For Postgres, array values can be resolved just like any other values
+
+```javascript
+var dataSpec = {
+  has_integer: {
+    integer: 7
+  },
+  needs_integer: {
+    // the last value will be 7 at insertion time
+    integer_array: [1, 2, 'has_integer:0:integer']
+  }
+};
+```
+
 # Promises and Callbacks
 
 Both are supported, promises created by [Bluebird](https://github.com/petkaantonov/bluebird) are returned
