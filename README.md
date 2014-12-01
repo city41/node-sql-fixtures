@@ -264,4 +264,4 @@ Please fork and send pull requests in the typical fashion.
 
 There are both unit and integration tests. The unit tests are invoked with `gulp test:unit`.
 
-Checkout integrationTests.md for the scoop on the integration tests.
+Checkout integration_tests.md for the scoop on the integration tests.
