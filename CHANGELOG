@@ -1,3 +1,7 @@
+0.4.2 - Dec 1, 2014
+-- Postgres now inserts in bulk again for a nice speed up. MySQL and Sqlite also insert in bulk now, but they must then serially query the database to retrieve what was inserted.
+-- clean up: integration tests are cleaner, and use more generic/test appropriate database tables
+
 0.4.1 - Oct 31, 2014
 -- Before MySQL and sqlite worked (< 0.3.0), inserts were done in bulk, and that meant primary keys ascended in a predictable manner.
    From 0.3.0 on, inserts were done one at a time and in parallel, removing the predictable id ordering. 0.4.1 changes it to
