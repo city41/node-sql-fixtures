@@ -215,6 +215,33 @@ describe('prioritize', function() {
     });
   });
 
+  describe('arrays', function() {
+    it('should take arrays into account when prioritizing', function() {
+      var config = {
+        has_integer: {
+          integer: 9,
+          specId: 'hi0'
+        },
+        needs_integer: [{
+          integers: ['has_integer:hi0:integer', 4],
+          specId: 'ni0'
+        }]
+      };
+
+      expect(prioritize(config)).to.eql([{
+        has_integer: [{
+          integer: 9,
+          specId: 'hi0'
+        }]
+      }, {
+        needs_integer: [{
+          integers: ['has_integer:hi0:integer', 4],
+          specId: 'ni0'
+        }]
+      }]);
+    });
+  });
+
   describe('errors', function() {
     it('should return an error if a dependency does not exist', function() {
       var config = {

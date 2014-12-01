@@ -8,7 +8,7 @@ module.exports = function(dbConfig) {
 
     before(function() {
       this.fixtureGenerator = new FixtureGenerator(dbConfig);
-      var knex = this.knex = this.fixtureGenerator.knex;
+      this.knex = this.fixtureGenerator.knex;
     });
 
     beforeEach(function(done) {
