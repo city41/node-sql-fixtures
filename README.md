@@ -8,7 +8,7 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 |-----------|----------|---------------|-----------------------------------------------------------------|
 | Postgres  | Yes      | 0.0.0         | Integration tests and two known projects using it (using 9.3)   |
 | MySQL     | Yes | 0.4.0         | Integration tests for MySQL exist, and one known project using it |
-| sqlite3   | Probably | 0.3.0         | Integration tests for sqlite exist, but no known usage. If you use sql-fixtures with sqlite, let me know how it's going |
+| sqlite3   | Yes | 0.3.0         | Integration tests for sqlite exist, and one known project using it |
 | MariaDB   | Unknown  | ?             | No integration tests, unknown how well it works. If you are a Maria user and want to help, that'd be great |
 
 [Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working shouldn't be too hard.
