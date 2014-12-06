@@ -281,3 +281,12 @@ Please fork and send pull requests in the typical fashion.
 There are both unit and integration tests. The unit tests are invoked with `gulp test:unit`.
 
 Checkout integration_tests.md for the scoop on the integration tests.
+
+# Road to 1.0.0
+
+These things remain to accomplish "one point oh"
+
+* option to prevent inserting duplicates ([issue #19](https://github.com/city41/node-sql-fixtures/issues/19))
+* integration tests for MariaDB
+* better error reporting when a dependency can't be resolved
+* better docs, perhaps a simple website
