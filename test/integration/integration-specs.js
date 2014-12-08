@@ -405,6 +405,36 @@ module.exports = function(dbConfig) {
       });
     });
 
+    describe('unique rows', function() {
+      it('should not insert the same data more than once', function(done) {
+        var dataConfig = {
+          simple_table: [
+          { string_column: 'same value'},
+          { string_column: 'same value'},
+          { string_column: 'same value'}
+          ]
+        };
+        var knex = this.knex;
+        var fg = this.fixtureGenerator;
+
+        fg.create(dataConfig, { unique: true }).then(function(results) {
+          expect(results.simple_table.length).to.equal(1);
+          knex('simple_table').then(function(result) {
+            expect(result.length).to.equal(1);
+
+            fg.create(dataConfig, { unique: true }).then(function(results) {
+              expect(results.simple_table.length).to.equal(0);
+
+              knex('simple_table').then(function(result) {
+                expect(result.length).to.equal(1);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+
     describe('calling the callback', function() {
       it('should call the callback if provided', function(done) {
         var dataConfig = {
