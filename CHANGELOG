@@ -1,3 +1,6 @@
+0.6.0 - Dec 10, 2014
+-- added experimental support for "unique" (see README)
+
 0.5.0 - Dec 1, 2014
 -- added support for Postgres array columns
 

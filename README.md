@@ -235,6 +235,7 @@ sqlFixtures.create(dbConfig, dataSpec).done(function(result) {
 }, function(err) {
 });
 ```
+
 # Connecting to the database
 `sqlFixtures.create()`'s first argument is a dbConfig object. This is passed directly to Knex. See [Knex's docs on configuration](http://knexjs.org/#Installation-client) for the details, but generally you just need to do this:
 
@@ -269,6 +270,21 @@ If you need Knex right away, you can create an instance of a sql-fixtures object
 
 If you don't need this, ignore it, just use sql-fixtures in the normal fashion
 
+# Additional Options
+
+You can call `create()` with an additional options parameter:
+
+```
+var options = {
+  unique: true
+};
+fixtureCreator.create(dataSpec, options, callback);
+```
+
+## Available Options
+
+* unique (boolean): **experimental** if true, sql-fixtures will attempt to avoid inserting rows that have the same data. This means before doing an insert it looks at the records about to be inserted and filters out duplicates. It also queries the database to ensure each incoming record is unique within the database. This is an experimental feature as of now.
+
 # Assumptions and Limitations
 
 * sql-fixtures assumes your tables have an "id" column which is that table's primary key. Any other primary key approach will not work.
@@ -286,7 +302,6 @@ Checkout integration_tests.md for the scoop on the integration tests.
 
 These things remain to accomplish "one point oh"
 
-* option to prevent inserting duplicates ([issue #19](https://github.com/city41/node-sql-fixtures/issues/19))
 * integration tests for MariaDB
 * better error reporting when a dependency can't be resolved
 * better docs, perhaps a simple website
