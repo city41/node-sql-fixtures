@@ -1,10 +1,10 @@
 var specs = require('./integration-specs');
 
-describe("mysql intregation tests", function() {
+describe("maria intregation tests", function() {
   specs({
     client: 'mysql',
     connection: {
-      host: process.env.DOCKER_HOST || 'mysql',
+      host: process.env.DOCKER_HOST || 'maria',
       user: 'testdb',
       password: 'password',
       database: 'testdb',

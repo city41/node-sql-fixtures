@@ -8,6 +8,7 @@ node:
   links:
    - pg
    - mysql
+   - maria
 
 pg:
   image: postgres:9.3
@@ -26,3 +27,13 @@ mysql:
    - MYSQL_DATABASE=testdb
   ports:
    - "13306:3306"
+
+maria:
+  image: mariadb:10.1.2
+  environment:
+   - MYSQL_ROOT_PASSWORD=password
+   - MYSQL_USER=testdb
+   - MYSQL_PASSWORD=password
+   - MYSQL_DATABASE=testdb
+  ports:
+   - "13307:3306"

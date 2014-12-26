@@ -34,6 +34,14 @@ gulp.task('test:integration:mysql', function() {
     .pipe(mocha());
 });
 
+gulp.task('test:integration:maria', function() {
+  return gulp.src([
+    './test/helpers/*.js',
+    './test/integration/maria*.js'
+  ])
+    .pipe(mocha());
+});
+
 gulp.task('delete:sqlite', shell.task(['rm -f ./sqlite-integration-spec.db']));
 
 gulp.task('test:integration:sqlite', ['delete:sqlite'], function() {
@@ -47,7 +55,8 @@ gulp.task('test:integration:sqlite', ['delete:sqlite'], function() {
 gulp.task('test:integration', [
   'test:integration:sqlite',
   'test:integration:postgres',
-  'test:integration:mysql'
+  'test:integration:mysql',
+  'test:integration:maria'
 ])
 
 gulp.task('test', [

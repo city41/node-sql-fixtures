@@ -9,7 +9,7 @@ var dbConfig = {
     user: 'testdb',
     password: 'password',
     database: 'testdb',
-    port: process.env.DOCKER_PORT || 5432
+    port: Number(process.env.DOCKER_PORT || 5432)
   }
 };
 

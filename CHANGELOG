@@ -1,3 +1,6 @@
+0.7.0 - Dec 26, 2014
+-- added integration tests for MariaDB
+
 0.6.0 - Dec 10, 2014
 -- added experimental support for "unique" (see README)
 
