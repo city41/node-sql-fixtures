@@ -302,6 +302,5 @@ Checkout integration_tests.md for the scoop on the integration tests.
 
 These things remain to accomplish "one point oh"
 
-* integration tests for MariaDB
 * better error reporting when a dependency can't be resolved
 * better docs, perhaps a simple website
