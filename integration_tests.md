@@ -1,14 +1,16 @@
 # Integration Tests
 
-There is a simple integration test suite that runs against Postgres, sqlite and MySQL.
+There is a simple integration test suite that runs against Postgres, MySQL, Maria and sqlite.
 
 It is located at `test/integration`. The actual specs live in `integration-specs.js`, and each of the database specific suites invoke these specs, passing in their database specific knex config.
+
+Each database specific spec file can also have its own specs, postgres does this to test out array support for example.
 
 ## Need a quick smoke test?
 
 sqlite is your friend, `gulp test:integration:sqlite` is a quick easy way to run tests that hit an actual database. It should require no setup, just call it.
 
-## Running Postgres and MySQL integration tests using Docker and Fig
+## Running Postgres, MySQL and/or Maria integration tests using Docker and Fig
 
 Docker containers provide the database engines. Getting these running is not too bad, but will take a while the first time.
 
@@ -41,5 +43,6 @@ To do this, you need to run the db you're working with inside Docker, and the te
 1. `DOCKER_HOST=<host ip> DOCKER_PORT=<port> node --debug-brk $(which gulp) test:integration:<postgres or mysql>`
   * where ...
     * DOCKER_HOST is `localhost` on linux or whatever `boot2docker ip` tells you for OSX
-    * DOCKER_PORT is `15432` for postgres or `13306` for mysql
+    * on OSX, you can do this `DOCKER_HOST=$(boot2docker ip 2> /dev/null)`
+    * DOCKER_PORT is `15432` for postgres or `13306` for mysql or `13307` for Maria
 1. Head to node-inspector and debug as usual.
