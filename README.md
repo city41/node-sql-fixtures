@@ -1,6 +1,6 @@
 # sql-fixtures
 
-Easily generate data that gets saved in the database, with foreign key dependencies automatically resolved. Ideal for integration tests and generating dummy data
+Easily generate data that gets saved in the database, with foreign key dependencies automatically resolved. Ideal for integration tests and generating dummy data. Uses [knex](http://knexjs.org) internally.
 
 # Supported Databases
 
@@ -10,8 +10,6 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 | MySQL     | Yes | 0.4.0         | Integration tests for MySQL exist, and one known project using it |
 | sqlite3   | Yes | 0.3.0         | Integration tests for sqlite exist, and one known project using it |
 | MariaDB   | Probably  | 0.7.0   | Integration tests for Maria exist, no known projects using sql-fixtures with Maria |
-
-[Knex.js](http:/www.knexjs.org) is used internally, so getting all databases it supports working shouldn't be too hard.
 
 # Install
 
