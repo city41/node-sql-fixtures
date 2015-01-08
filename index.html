@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="X-UA-Compatible" content="chrome=1">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="viewport" content="target-densitydpi=device-dpi">
+      <meta name="HandheldFriendly" content="true">
+      <link rel="stylesheet" href="css/docs.css">
+      <title>
+         docs - sql-fixtures
+      </title>
+   </head>
+   <body>
+      <div id="sidebar" class="interface">
+         <a class="toc_title" href="#">sql-fixtures</a>
+         <ul class="toc_section">
+            <li>» <a href="http://github.com/city41/node-sql-fixtures">GitHub Repository</a></li>
+         </ul>
+         <a class="toc_title" href="#installation">installation</a>
+         <a class="toc_title" href="#basic-usage">Basic Usage</a>
+         <a class="toc_title" href="#callbacks-and-promises">Callbacks and Promises</a>
+         <a class="toc_title" href="#the-dataspec-object">The dataSpec Object</a>
+         <ul class="toc_section">
+            <li>- <a href="#resolving-foreign-relations">Resolving Foreign Relations</a></li>
+            <li>- <a href="#resolving-other-columns">Resolving Other Columns</a></li>
+            <li>- <a href="#resolving-using-spec-ids">Resolving Using Spec IDs</a></li>
+            <li>- <a href="#string-values-with-colons-in-them">String Values With Colons in Them</a></li>
+            <li>- <a href="#arbitrary-sql">Arbitrary SQL</a></li>
+            <li>- <a href="#array-columns-postgresql-only">Array Columns (PostgreSQL Only)</a></li>
+         </ul>
+         <a class="toc_title" href="#additional-options-to-create">Additional Options to create()</a>
+         <a class="toc_title" href="#connecting-to-the-database">Connecting to the Database</a>
+         <a class="toc_title" href="#disconnecting-from-the-database">Disconnecting from the Database</a>
+         <a class="toc_title" href="#creating-an-instance">Creating An Instance</a>
+         <a class="toc_title" href="#assumptions-and-limitations">Assumptions and Limitations</a>
+      </div>
+      <div class="container">
+         <p id="introduction">
+            <h1 class="logo">sql-fixtures (for Node.js)</h1>
+         </p>
+         <p>
+         <a href="http://github.com/city41/node-sql-fixtures">sql-fixtures</a> is a Node.js module that generates SQL data. It is ideal for integration tests and dummy data. It supports PostgreSQL, MySQL, MariaDB and SQLite, and is easy to use. It uses <a href="http://knexjs.org">knex</a> under the hood.
+         </p>
+         <div id="documentation">
+            <h2 id="installation">installation</h2>
+<pre>npm install --save-dev sql-fixtures</pre>
+
+            <p>
+            You will also need to install a driver for whatever database you are using, such as <a href="https://github.com/brianc/node-postgres">pg</a> for PostgreSQL, for example.
+            </p>
+            <h2 id="basic-usage">Basic Usage</h2>
+<pre>var sqlFixtures = require('sql-fixtures');
+
+// depending on which database engine you are using
+// this is a typical PostgreSQL config for the pg driver
+var dbConfig = {
+  client: 'pg',
+  connection: {
+    host: 'localhost',
+    user: 'testdb',
+    password: 'password',
+    database: 'testdb',
+    port: 15432
+  }
+};
+
+var dataSpec = {
+  users: {
+    username: 'Bob',
+    email: 'bob@example.com'
+  }
+};
+
+sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
+  // at this point a row has been added to the users table
+  console.log(result.users[0].username);
+});</pre>
+
+            <h2 id="callbacks-and-promises">Callbacks and Promises</h2>
+            <p>Both callbacks and promises are supported by <tt>sqlFixtures.create()</tt>.
+              You can either do
+            </p>
+
+            <p>
+              <tt>sqlFixtures.create(dbConfig, dataSpec, callback)</tt>
+            </p>
+
+            <p>or</p>
+
+            <p>
+              <tt>sqlFixtures.create(dbConfig, dataSpec).then(callback, errback)</tt>.
+            </p>
+            <p>When using callbacks, the signature is the Node standard <tt>function(err, result)</tt>, with <tt>err</tt> being falsy if there is no error.
+            </p>
+
+            <h2 id="the-dataspec-object">The dataSpec Object</h2>
+            <p>This object indicates what data should get added to the database. The root keys of the object must match your table names exactly. The keys of the objects under the table must match column names exactly.</p>
+
+<pre>var dataSpec = {
+  // this must match your table's name exactly
+  users: {
+    // this must match your column name exactly
+    username: 'Bob'
+  }
+};</pre>
+
+            <p>If you need to insert more than one record, use an array instead</p>
+
+<pre>var dataSpec = {
+  users: [
+    { username: 'Bob' },
+    { username: 'Sally'}
+  ]
+};</pre>
+
+            <h3 id="resolving-foreign-relations">Resolving Foreign Relations</h3>
+            <p>sql-fixtures will resolve foreign relation columns automatically for you. This feature is the real power behind the module. To do this, reference the desired foreign relation from another table using a string</p>
+
+<pre>var dataSpec = {
+  users: [
+    { username: 'Bob' },
+    { username: 'Sally'}
+  ],
+
+  items: {
+    name: 'book',
+    // at database insertion time, this will be Bob's id
+    user_id: 'users:0'
+  }
+};
+
+sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
+  console.log(result.items[0].user_id == result.users[0].id); // true
+});
+</pre>
+
+            <h3 id="resolving-other-columns">Resolving Other Columns</h3>
+            <p>You can resolve other columns by appending their name to the resolution string. If left off it assumes you want <tt>id</tt></p>
+
+<pre>var dataSpec = {
+  users: [
+    { username: 'bob' },
+    { username: 'users:0:username' }
+  ]
+};</pre>
+
+            <p>Both of the above users will have their username set to "bob"</p>
+
+            <h3 id="resolving-using-spec-ids">Resolving Using Spec IDs</h3>
+            <p>If you are generating a lot of data, indices can get tedious. You can use a specId instead.</p>
+
+<pre>var dataSpec = {
+  users: {
+    username: 'bob',
+    specId: 'mySpecialUser'
+  },
+  items: {
+    // this resolves to bob's id
+    // at creation time
+    user_id: 'users:mySpecialUser',
+    name: 'book'
+  }
+};
+
+var dbConfig = {...}; // see below
+sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
+  console.log(result.Items[0].userId === result.Users[0].id); // true
+});</pre>
+
+            <p>Both of the above users will have their username set to "bob"</p>
+
+            <h3 id="string-values-with-colons-in-them">String Values With Colons In Them</h3>
+            <p>If you need a literal <tt>:</tt> in a string column, double it up to escape it</p>
+
+<pre>var dataSpec = {
+  websites: {
+    // https://github.com is what gets written to the database
+    url: 'https:://github.com'
+  }
+};</pre>
+
+            <h3 id="arbitrary-sql">Arbitrary SQL</h3>
+            <p>sql-fixtures can run arbitrary sql by use of the <tt>sql</tt> key on the dataSpec object. This SQL must conform to your database. After any resolution has been done, the string is passed as is to the database.</p>
+
+<pre>var dataSpec = {
+  users: {
+    username: 'bob'
+  },
+  // notice the sql key also supports resolution
+  sql: 'insert into items ("name", "user_id") values (\'book\', {users:0})'
+};</pre>
+
+            <p><b>NOTE:</b> the result object that is returned will have nothing in it in regards to arbitrary SQL. As far as that object is concerned, arbitrary sql does not exist.</p>
+
+The config is optional, reasonable defaults are set if it is omitted. The config can contain the following keys:
+
+            <h3 id="array-columns-postgresql-only">Array Columns (PostgreSQL Only)</h3>
+            <p>When using Postgres, you can specify array columns. They support resolution as well.<p>
+
+<pre>var dataSpec = {
+  has_integer: {
+    integer: 7
+  },
+  needs_integer: {
+    // the last value will be 7 at insertion time
+    integer_array: [1, 2, 'has_integer:0:integer']
+  }
+};</pre>
+
+        <h2 id="additional-options-to-create">Additional Options to create()</h2>
+        <p>You can pass in an options object to <tt>create()</tt> to further control the data generation.</p>
+
+<pre>var options = {
+  unique: true
+};
+sqlFixtures.create(dbConfig, options, dataSpec, function(err, result) {
+  ...
+});</pre>
+
+        <p>There is currently only one available option, <tt>unique</tt>. If true, sqlFixtures will attempt to avoid inserting a new row that is identical to existing rows in the table.</p>
+
+        <p><b>NOTE:</b> <tt>unique</tt> is slightly experimental and might change or go away in the future.</p>
+
+        <h2 id="connecting-to-the-database">Connecting to the Database</h2>
+        <p>The <tt>dbConfig</tt> object that you pass to sqlFixtures is handed off as-is to Knex. See <a href="http://knexjs.org/#Installation-client">Knex's documentation on clients</a> for more info on what needs to be in this object.</p>
+
+        <h2 id="disconnecting-from-the-database">Disconnecting from the Database</h2>
+        <p>calling <tt>sqlFixtures.destroy(callback)</tt> will close the connection to the database. <tt>destroy()</tt> both can take a callback and returns a promise to indicate when the connection has been closed or if there was an error.</p>
+
+        <h2 id="creating-an-instance">Creating an instance of sql-fixtures</h2>
+        <p>Generally you work with sql-fixtures calling the static <tt>create()</tt> method. You can also create an instance of sql-fixtures if you like. This has the advantage of not having to pass the database config to <tt>create()</tt> every time, and also gives you access to the <tt>knex</tt> object that sql-fixtures creates right away.</p>
+
+<pre>var sqlFixtures = require('sql-fixtures');
+var fixtureCreator = new sqlFixtures(dbConfig);
+
+// fixtureCreator.knex is now available and ready to go
+// when calling create(), omit the dbConfig parameter
+fixtureCreator.create(dataSpec, callback);</pre>
+
+          <h2 id="assumptions-and-limitations">Assumptions and Limitations</h2>
+          <ul>
+            <li>sql-fixtures assumes your primary key columns are all called "id". Any other primary key naming scheme will not work.</li>
+            <li>sql-fixtures offers no means of deleting data. You can use <tt>sqlFixtures.knex</tt> to delete data if you wish.</li>
+            <li>sql-fixtures makes no attempt whatsoever to be secure. Not intended for use in a production environment!</li>
+          </ul>
+      </div>
+   </body>
+</html>
