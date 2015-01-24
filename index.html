@@ -168,8 +168,6 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
   console.log(result.Items[0].userId === result.Users[0].id); // true
 });</pre>
 
-            <p>Both of the above users will have their username set to "bob"</p>
-
             <h3 id="string-values-with-colons-in-them">String Values With Colons In Them</h3>
             <p>If you need a literal <tt>:</tt> in a string column, double it up to escape it</p>
 
@@ -192,8 +190,6 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 };</pre>
 
             <p><b>NOTE:</b> the result object that is returned will have nothing in it in regards to arbitrary SQL. As far as that object is concerned, arbitrary sql does not exist.</p>
-
-The config is optional, reasonable defaults are set if it is omitted. The config can contain the following keys:
 
             <h3 id="array-columns-postgresql-only">Array Columns (PostgreSQL Only)</h3>
             <p>When using Postgres, you can specify array columns. They support resolution as well.<p>
@@ -240,7 +236,7 @@ fixtureCreator.create(dataSpec, callback);</pre>
 
           <h2 id="assumptions-and-limitations">Assumptions and Limitations</h2>
           <ul>
-            <li>sql-fixtures assumes your primary key columns are all called "id". Any other primary key naming scheme will not work.</li>
+            <li>sql-fixtures assumes your primary key columns are all called "id". Any other primary key naming scheme will not work. In theory this is a temporary limitation, but honestly not sure when it will get resolved as I've seen no demand to change this.</li>
             <li>sql-fixtures offers no means of deleting data. You can use <tt>sqlFixtures.knex</tt> to delete data if you wish.</li>
             <li>sql-fixtures makes no attempt whatsoever to be secure. Not intended for use in a production environment!</li>
           </ul>
