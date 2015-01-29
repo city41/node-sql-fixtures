@@ -230,7 +230,6 @@ module.exports = function(dbConfig) {
           }]
         };
 
-        var knex = this.knex;
         this.fixtureGenerator.create(dataConfig).then(function(results) {
           expect(results.has_two_foreign_keys[0].string_column).to.eql('value5');
           expect(results.has_two_foreign_keys[1].string_column).to.eql('value6');
@@ -252,6 +251,30 @@ module.exports = function(dbConfig) {
             expect(results.simple_table[i].id).to.be.greaterThan(results.simple_table[i-1].id);
           }
           done();
+        });
+      });
+
+      describe("when inserting multiple times (issue #22)", function() {
+        it("should resolve foreign dependencies correctly", function(done) {
+          var dataConfig = {
+            simple_table: {
+              string_column: 'value1'
+            },
+            has_foreign_key: {
+              string_column: 'value2',
+              simple_table_id: 'simple_table:0'
+            }
+          };
+
+          this.fixtureGenerator.create(dataConfig).bind(this).then(function(firstResult) {
+            this.fixtureGenerator.create(dataConfig).bind(this).then(function(secondResult) {
+              expect(secondResult.has_foreign_key[0].simple_table_id).to.not.equal(
+                firstResult.simple_table[0].id
+              );
+              expect(firstResult.simple_table[0].id).to.not.equal(secondResult.simple_table[0].id);
+              done();
+            });
+          });
         });
       });
 
