@@ -1,3 +1,6 @@
+0.8.2 - Jan 31, 2015
+-- hopefully more robust fix for the MySQL bug 0.8.1 tried to address (#22)
+
 0.8.1 - Jan 29, 2015
 -- added "order by id" for retrieving inserted records for mysql, fixes issue #22
 
