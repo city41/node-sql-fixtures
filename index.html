@@ -34,6 +34,9 @@
          <a class="toc_title" href="#disconnecting-from-the-database">Disconnecting from the Database</a>
          <a class="toc_title" href="#creating-an-instance">Creating An Instance</a>
          <a class="toc_title" href="#assumptions-and-limitations">Assumptions and Limitations</a>
+         <ul class="toc_section">
+           <li>- <a href="#no-primary-key-warning">No Primary Key Warning</a></li>
+         </ul>
       </div>
       <div class="container">
          <p id="introduction">
@@ -240,6 +243,26 @@ fixtureCreator.create(dataSpec, callback);</pre>
             <li>sql-fixtures offers no means of deleting data. You can use <tt>sqlFixtures.knex</tt> to delete data if you wish.</li>
             <li>sql-fixtures makes no attempt whatsoever to be secure. Not intended for use in a production environment!</li>
           </ul>
+
+          <h3 id="no-primary-key-warning">No Primary Key Warning</h3>
+          <p>
+            If you are using <b>MySQL</b>, <b>Maria</b> or <b>SQLite</b> and you want to insert records
+            using sql-fixtures on a table that lacks a primary key, you may get unexpected results. Postgres
+            does not have this limitation.
+          </p>
+          <p>This is due to how these databases perform inserts. After an insert, sql-fixtures needs to then retrieve the
+            entire inserted row from the database. This is so data that is needed to resolve other dependencies in fixtures can be obtained.
+          </p>
+          <p>The only way I know of to do this in non-postgres databases is to make a SELECT query using the id of the most recently inserted row.
+            For example, in MySQL/Maria this can be done with <tt>SELECT * from table where id = LAST_INSERT_ID()</tt>. But if your table lacks a primary key
+            column, then there's no way to do this. In this scenario, sql-fixtures will still do a SELECT and hope the row that comes back is the right one.
+          </p>
+          <p>Most of the time this won't be a problem, but it can be in more advanced/unusual scenarios.
+          </p>
+          <p>Postgres avoids this problem because you can have Postgres return the inserted rows as the result of the insert.
+            This also means sql-fixtures is more performant with Postgres, as it can insert rows in bulk, where with the other databases
+            records must be inserted one at a time.
+          </p>
       </div>
    </body>
 </html>
