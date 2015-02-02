@@ -4,8 +4,8 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 # Supported Databases
 
-| Database  | Works?   | As of version | Integration Tests? | Usage |
-|-----------|----------|---------------|-----------------------------------------------------------------|
+| Database  | Works?   | As of version | Integration Tests? | Usage                                      |
+|-----------|----------|---------------|--------------------|--------------------------------------------|
 | Postgres  | Yes      | 0.0.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/postgres-integration-spec.js) | several projects known   |
 | MySQL     | Yes | 0.4.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/mysql-integration-spec.js) | several projects known |
 | sqlite3   | Yes | 0.3.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/sqlite-integration-spec.js) | one known project |
