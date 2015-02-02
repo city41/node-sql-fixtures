@@ -4,12 +4,12 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 # Supported Databases
 
-| Database  | Works?   | As of version | Details                                                         |
+| Database  | Works?   | As of version | Integration Tests? | Usage |
 |-----------|----------|---------------|-----------------------------------------------------------------|
-| Postgres  | Yes      | 0.0.0         | Integration tests and several known projects using it   |
-| MySQL     | Yes | 0.4.0         | Integration tests for MySQL exist, and several known projects using it |
-| sqlite3   | Yes | 0.3.0         | Integration tests for sqlite exist, and one known project using it |
-| MariaDB   | Probably  | 0.7.0   | Integration tests for Maria exist, no known projects using sql-fixtures with Maria |
+| Postgres  | Yes      | 0.0.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/postgres-integration-spec.js) | several projects known   |
+| MySQL     | Yes | 0.4.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/mysql-integration-spec.js) | several projects known |
+| sqlite3   | Yes | 0.3.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/sqlite-integration-spec.js) | one known project |
+| MariaDB   | Yes  | 0.7.0   | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/maria-integration-spec.js) | no known projects :( |
 
 # Install
 
