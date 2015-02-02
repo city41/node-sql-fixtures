@@ -6,8 +6,8 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 
 | Database  | Works?   | As of version | Details                                                         |
 |-----------|----------|---------------|-----------------------------------------------------------------|
-| Postgres  | Yes      | 0.0.0         | Integration tests and two known projects using it (using 9.3)   |
-| MySQL     | Yes | 0.4.0         | Integration tests for MySQL exist, and one known project using it |
+| Postgres  | Yes      | 0.0.0         | Integration tests and several known projects using it   |
+| MySQL     | Yes | 0.4.0         | Integration tests for MySQL exist, and several known projects using it |
 | sqlite3   | Yes | 0.3.0         | Integration tests for sqlite exist, and one known project using it |
 | MariaDB   | Probably  | 0.7.0   | Integration tests for Maria exist, no known projects using sql-fixtures with Maria |
 
