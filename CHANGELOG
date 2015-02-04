@@ -1,3 +1,6 @@
+0.8.3 - Feb 3, 2015
+-- Fix for isPostgres(). It wasn't accounting for connection strings versus objects.
+
 0.8.2 - Jan 31, 2015
 -- hopefully more robust fix for the MySQL bug 0.8.1 tried to address (#22)
 
