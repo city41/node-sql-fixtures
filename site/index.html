@@ -194,6 +194,8 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 
             <p><b>NOTE:</b> the result object that is returned will have nothing in it in regards to arbitrary SQL. As far as that object is concerned, arbitrary sql does not exist.</p>
 
+            <p><b>Also: </b> the <tt>sql</tt> key can be an array of sql statements. The statements will be performed in parallel with no guarantee of order.</p>
+
             <h3 id="array-columns-postgresql-only">Array Columns (PostgreSQL Only)</h3>
             <p>When using Postgres, you can specify array columns. They support resolution as well.<p>
 
