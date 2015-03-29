@@ -213,15 +213,18 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
         <p>You can pass in an options object to <tt>create()</tt> to further control the data generation.</p>
 
 <pre>var options = {
-  unique: true
+  unique: true,
+  showWarning: false
 };
 sqlFixtures.create(dbConfig, options, dataSpec, function(err, result) {
   ...
 });</pre>
 
-        <p>There is currently only one available option, <tt>unique</tt>. If true, sqlFixtures will attempt to avoid inserting a new row that is identical to existing rows in the table.</p>
+        <p><tt>unique</tt>, If true, sqlFixtures will attempt to avoid inserting a new row that is identical to existing rows in the table.</p>
 
         <p><b>NOTE:</b> <tt>unique</tt> is slightly experimental and might change or go away in the future.</p>
+
+        <p><tt>showWarning</tt>, if false, suppresses the warning about no primary key columns, see the <a href="#no-primary-key-warning">No primary key warning</a> section for more details.</p>
 
         <h2 id="connecting-to-the-database">Connecting to the Database</h2>
         <p>The <tt>dbConfig</tt> object that you pass to sqlFixtures is handed off as-is to Knex. See <a href="http://knexjs.org/#Installation-client">Knex's documentation on clients</a> for more info on what needs to be in this object.</p>
@@ -265,6 +268,8 @@ fixtureCreator.create(dataSpec, callback);</pre>
             This also means sql-fixtures is more performant with Postgres, as it can insert rows in bulk, where with the other databases
             records must be inserted one at a time.
           </p>
+          <h4>Suppress the Warning</h4>
+          <p>You can suppress this warning by adding <tt>{showWarning: false}</tt> as an additional parameter to <tt>create()</tt>.</p>
       </div>
    </body>
 </html>
