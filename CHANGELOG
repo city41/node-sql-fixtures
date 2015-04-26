@@ -1,3 +1,7 @@
+0.10.1 - April 26, 2015
+-- more accurate detection of postgres. Some postgres users were falsely
+detected, causing them to go into serial mode when it wasn't needed
+
 0.10.0 - April 26, 2015
 -- Since everything got confusing with 0.9.0 and 0.9.3, just bumping a new
 release to get past the confusion. 
