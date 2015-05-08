@@ -497,6 +497,47 @@ module.exports = function(dbConfig) {
       });
     });
 
+
+    describe('truncate', function() {
+      var 
+        fixture, knex;
+      function testRowCount(n, callback) {
+        var array = [
+          knex.select().table('simple_table'),
+          knex.select().table('has_foreign_key')
+        ];
+        bluebird.all(array).then(function(results) {
+          expect(results[0].length).to.eql(n);
+          expect(results[1].length).to.eql(n);
+          callback();
+        });
+      }
+      it('should work', function(done) {
+        var dataConfig = {
+          simple_table: {
+            string_column: 'value1'
+          },
+          has_foreign_key: {
+            string_column: 'value2',
+            simple_table_id: 'simple_table:0'
+          }
+        };
+        fixture = this.fixtureGenerator,
+        knex = this.knex;
+
+        fixture.create(dataConfig).then(function(results) {
+          testRowCount(1, function() {
+            fixture.truncate([
+              'simple_table', 
+              'has_foreign_key'
+            ]).then(function() {
+              testRowCount(0, done);
+            });
+          });
+        });
+      });
+    });
+
     describe('reusing the instance', function() {
       it('should reconnect after a destroy', function(done) {
         var dataConfig = {
