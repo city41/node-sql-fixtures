@@ -11,6 +11,8 @@ Easily generate data that gets saved in the database, with foreign key dependenc
 | sqlite3   | Yes | 0.3.0         | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/sqlite-integration-spec.js) | one known project |
 | MariaDB   | Yes  | 0.7.0   | [Yes](https://github.com/city41/node-sql-fixtures/blob/master/test/integration/maria-integration-spec.js) | no known projects :( |
 
+For MySQL, Maria and sqlite you can run into issues for [tables that lack a singular primary key](http://city41.github.io/node-sql-fixtures/#no-primary-key-warning). This issue [can be resolved for sqlite](https://github.com/city41/node-sql-fixtures/issues/32), but so far I have not found a 100% solution for MySQL/Maria.
+
 # Install
 
 `npm install sql-fixtures`
