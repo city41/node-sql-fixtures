@@ -319,7 +319,7 @@ module.exports = function(dbConfig) {
           this.fixtureGenerator.create(dataConfig).then(function(results) {
             expect(results.has_no_id_column[0].foreign_a_id).to.eql(2);
             expect(results.has_no_id_column[0].foreign_b_id).to.eql(3);
-            expect(results.has_no_id_column[0].auto_populated_column).to.eql("autopopulated");
+            expect(results.has_no_id_column[0].auto_populated_column).to.exist;
 
             expect(results.has_no_id_column[1].foreign_a_id).to.eql(5);
             expect(results.has_no_id_column[1].foreign_b_id).to.eql(6);
@@ -327,7 +327,7 @@ module.exports = function(dbConfig) {
 
             knex('has_no_id_column').where('foreign_a_id', 2).then(function(knexResult) {
               expect(knexResult[0].foreign_b_id).to.eql(3);
-              expect(knexResult[0].auto_populated_column).to.eql("autopopulated");
+              expect(knexResult[0].auto_populated_column).to.exist;
               done();
             });
           });

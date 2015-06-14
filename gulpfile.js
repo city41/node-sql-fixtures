@@ -3,6 +3,14 @@ var mocha = require('gulp-mocha');
 var shell = require('gulp-shell');
 var jshint = require('gulp-jshint');
 
+function runSpecs(path) {
+  return gulp.src([
+    './test/helpers/*.js',
+    path
+  ])
+  .pipe(mocha());
+}
+
 gulp.task('lint', function() {
   return gulp.src(['./lib/**/*.js', './test/**/*.js'])
    .pipe(jshint({ loopfunc: true, expr: true }))
@@ -11,45 +19,25 @@ gulp.task('lint', function() {
 });
 
 gulp.task('test:unit', ['lint'], function() {
-  return gulp.src([
-    './test/helpers/*.js',
-    './test/unit/*.js'
-  ])
-    .pipe(mocha());
+  return runSpecs('./test/unit/*.js');
 });
 
 gulp.task('test:integration:postgres', function() {
-  return gulp.src([
-    './test/helpers/*.js',
-    './test/integration/postgres*.js'
-  ])
-    .pipe(mocha());
+  return runSpecs('./test/integration/postgres*.js');
 });
 
 gulp.task('test:integration:mysql', function() {
-  return gulp.src([
-    './test/helpers/*.js',
-    './test/integration/mysql*.js'
-  ])
-    .pipe(mocha());
+  return runSpecs('./test/integration/mysql*.js');
 });
 
 gulp.task('test:integration:maria', function() {
-  return gulp.src([
-    './test/helpers/*.js',
-    './test/integration/maria*.js'
-  ])
-    .pipe(mocha());
+  return runSpecs('./test/integration/maria*.js');
 });
 
 gulp.task('delete:sqlite', shell.task(['rm -f ./sqlite-integration-spec.db']));
 
 gulp.task('test:integration:sqlite', ['delete:sqlite'], function() {
-  return gulp.src([
-    './test/helpers/*.js',
-    './test/integration/sqlite*.js'
-  ])
-  .pipe(mocha());
+  return runSpecs('./test/integration/sqlite*.js');
 });
 
 gulp.task('test:integration', [

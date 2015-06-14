@@ -5,7 +5,7 @@ var specs = require('./integration-specs');
 var dbConfig = {
   client: 'pg',
   connection: {
-    host: process.env.DOCKER_HOST || 'pg',
+    host: process.env.DOCKER_IP || 'pg',
     user: 'testdb',
     password: 'password',
     database: 'testdb',

@@ -4,7 +4,7 @@ describe("mysql intregation tests", function() {
   specs({
     client: 'mysql',
     connection: {
-      host: process.env.DOCKER_HOST || 'mysql',
+      host: process.env.DOCKER_IP || 'mysql',
       user: 'testdb',
       password: 'password',
       database: 'testdb',

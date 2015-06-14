@@ -40,9 +40,9 @@ To do this, you need to run the db you're working with inside Docker, and the te
 
 1. fig up -d <pg or mysql>
 1. `node-inspector`
-1. `DOCKER_HOST=<host ip> DOCKER_PORT=<port> node --debug-brk $(which gulp) test:integration:<postgres or mysql>`
+1. `DOCKER_IP=<host ip> DOCKER_PORT=<port> node --debug-brk $(which gulp) test:integration:<postgres, mysql or maria>`
   * where ...
-    * DOCKER_HOST is `localhost` on linux or whatever `boot2docker ip` tells you for OSX
+    * DOCKER_IP is `localhost` on linux or whatever `boot2docker ip` tells you for OSX
     * on OSX, you can do this `DOCKER_HOST=$(boot2docker ip 2> /dev/null)`
     * DOCKER_PORT is `15432` for postgres or `13306` for mysql or `13307` for Maria
 1. Head to node-inspector and debug as usual.

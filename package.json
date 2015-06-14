@@ -41,9 +41,9 @@
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
-    "gulp": "^3.8.8",
+    "gulp": "^3.9.0",
     "gulp-jshint": "^1.8.5",
-    "gulp-mocha": "^1.1.0",
+    "gulp-mocha": "^2.1.0",
     "gulp-shell": "^0.2.9",
     "mocha": "^1.21.4",
     "mysql": "^2.5.2",
