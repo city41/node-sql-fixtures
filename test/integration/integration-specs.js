@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var knex = require('knex');
 var bluebird = require('bluebird');
 var FixtureGenerator = require('../../lib/fixture-generator');
 
@@ -493,6 +494,28 @@ module.exports = function(dbConfig) {
           expect(err).to.be.undefined;
           expect(results.simple_table[0].string_column).to.eql('a value');
           done();
+        });
+      });
+    });
+
+    describe('providing a knex instance', function() {
+      it('should use the provided knex instance', function(done) {
+        var myKnex = knex(dbConfig);
+        var fixtureGenerator = new FixtureGenerator(myKnex);
+
+        expect(fixtureGenerator.knex).to.equal(myKnex);
+
+        var dataConfig = {
+          simple_table: {
+            string_column: 'a value'
+          }
+        };
+
+        fixtureGenerator.create(dataConfig, function(err, results) {
+          expect(err).to.be.undefined;
+          expect(results.simple_table[0].string_column).to.eql('a value');
+
+          myKnex.destroy().nodeify(done);
         });
       });
     });

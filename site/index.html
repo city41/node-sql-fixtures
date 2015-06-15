@@ -33,6 +33,7 @@
          <a class="toc_title" href="#connecting-to-the-database">Connecting to the Database</a>
          <a class="toc_title" href="#disconnecting-from-the-database">Disconnecting from the Database</a>
          <a class="toc_title" href="#creating-an-instance">Creating An Instance</a>
+         <a class="toc_title" href="#using-an-existing-knex-instance">Using An Existing Knex Instance</a>
          <a class="toc_title" href="#assumptions-and-limitations">Assumptions and Limitations</a>
          <ul class="toc_section">
            <li>- <a href="#no-primary-key-warning">No Primary Key Warning</a></li>
@@ -241,6 +242,18 @@ var fixtureCreator = new sqlFixtures(dbConfig);
 // fixtureCreator.knex is now available and ready to go
 // when calling create(), omit the dbConfig parameter
 fixtureCreator.create(dataSpec, callback);</pre>
+
+        <h2 id="using-an-existing-knex-instance">Using an existing knex instance</h2>
+        <p>If you already have your own instance of knex, you can have sql-fixtures use it by creating an instance of sql-fixtures and passing in the knex instance.</p>
+
+<pre>var sqlFixtures = require('sql-fixtures');
+var myKnex = knex(myDbConfig);
+var fixtureCreator = new sqlFixtures(myKnex);
+
+// your instance of knex is now used to create data
+fixtureCreator.create(dataSpec, callback);</pre>
+
+        <p>If you are using your own instance of knex, then <tt>sqlFixtures.destroy()</tt> is not supported, you must destroy knex yourself.</p>
 
           <h2 id="assumptions-and-limitations">Assumptions and Limitations</h2>
           <ul>

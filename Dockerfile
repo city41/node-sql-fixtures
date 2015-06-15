@@ -1,4 +1,4 @@
-FROM dockerfile/nodejs
+FROM node:0.12
 
 ENV LAST_UPDATED "2014-11-16-2:45"
 
