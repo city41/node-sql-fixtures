@@ -71,6 +71,100 @@ module.exports = function(dbConfig) {
       this.fixtureGenerator.destroy(done);
     });
 
+    describe('selecting pre-existing data with unknown ID:s', function() {
+      beforeEach(function createTableWithUnknownIds(done) {
+        var wantedData = 'unique row';
+        this.knex('simple_table')
+          .insert([{
+            string_column: 'non-unique row'
+          }, {
+            string_column: wantedData
+          }, {
+            string_column: 'non-unique row'
+          }])
+          .then(function(result) {
+            done();
+          });
+
+        this.dataConfig = {
+          has_foreign_key: [{
+            string_column: 'first row with external reference',
+            simple_table_id: {from: 'simple_table', where: { string_column: wantedData }}
+          }, {
+            string_column: 'second row with external reference',
+            simple_table_id: {from: 'simple_table', where: { string_column: wantedData }}
+          }]
+        };
+      });
+
+      it('should replace a single query object with its result, corresponding to a FK', function(done) {
+        var knex = this.knex;
+        this.fixtureGenerator.create(this.dataConfig).then(function checkSimpleTableIdMatches(fixtures) {
+          expect(fixtures.has_foreign_key[0].simple_table_id, 'resolved FK').to.be.gt(0);
+
+          knex('simple_table')
+            .first()
+            .where('id', fixtures.has_foreign_key[0].simple_table_id)
+            .then(function(rowIdentifiedByFk) {
+              expect(rowIdentifiedByFk, 'rowIdentifiedByFk').to.have.property('string_column');
+              expect(rowIdentifiedByFk.string_column).to.eql('unique row');
+              done();
+            });
+        })
+        .catch(function (err) {
+          done(err);
+        });
+      });
+
+      it('should replace multiple query objects with their corresponding FK:s', function(done) {
+        var knex = this.knex;
+        this.fixtureGenerator.create(this.dataConfig).then(function checkSimpleTableIdMatches(fixtures) {
+          expect(fixtures.has_foreign_key[0].simple_table_id, 'resolved FK').to.be.gt(0);
+
+          knex('simple_table')
+            .first()
+            .where('id', fixtures.has_foreign_key[0].simple_table_id)
+            .then(function(rowIdentifiedByFk) {
+              expect(rowIdentifiedByFk, 'rowIdentifiedByFk').to.have.property('string_column');
+              expect(rowIdentifiedByFk.string_column).to.eql('unique row');
+              done();
+            });
+        })
+        .catch(function (err) {
+          done(err);
+        });
+      });
+
+      it('should fail early for errors during FK lookup', function(done) {
+        var dataConfig = {
+          has_foreign_key: {
+            simple_table_id: {from: 'invalid_table', where: {}}
+          }
+        };
+
+        this.fixtureGenerator.create(dataConfig)
+          .then(function (res) {
+            done(new Error('promise should have been rejected'));
+          })
+          .catch(function (err) {
+            done();
+          })
+      });
+
+      it('should fail early if FK lookup finds multiple rows', function(done) {
+        this.dataConfig['has_foreign_key'][0]['simple_table_id']['where'] = {string_column: 'non-unique row'};
+
+        this.fixtureGenerator.create(this.dataConfig)
+          .then(function (res) {
+            done(new Error('promise should have been rejected'));
+          })
+          .catch(function (err) {
+            expect(err.message).to.contain('>1 possible');
+            done();
+          })
+      });
+    });
+
     describe("generating fixtures", function() {
       it('should create a fixture with dependencies resolved', function(done) {
         var dataConfig = {
