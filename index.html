@@ -23,6 +23,7 @@
          <a class="toc_title" href="#the-dataspec-object">The dataSpec Object</a>
          <ul class="toc_section">
             <li>- <a href="#resolving-foreign-relations">Resolving Foreign Relations</a></li>
+            <li>- <a href="#foreign-relations-from-existing-data">Foreign Relations From Existing Data</a></li>
             <li>- <a href="#resolving-other-columns">Resolving Other Columns</a></li>
             <li>- <a href="#resolving-using-spec-ids">Resolving Using Spec IDs</a></li>
             <li>- <a href="#string-values-with-colons-in-them">String Values With Colons in Them</a></li>
@@ -138,6 +139,21 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
   console.log(result.items[0].user_id == result.users[0].id); // true
 });
 </pre>
+
+            <h3 id="foreign-relations-from-existing-data">Foreign Relations From Existing Data</h3>
+            <p>As of version 0.12.0, you can resolve foreign keys against data already in the database.</p>
+
+<pre>var dataSpec = {
+  items: {
+    name: 'book',
+    user_id: {from: 'users', where: {'name': 'Bob'}}
+  }
+};
+</pre>
+
+            <p>In the above, sql-fixtures will look for a user whose name is set to Bob. The found row's id will be set as the user_id before inserting the item row.</p>
+            <p><tt>from</tt> must indicate a table name, and <tt>where</tt> can be any <a href="http://knexjs.org/#Builder-where">knex where expression</a>. The result must return one row, otherwise an error will be thrown.</p>
+
 
             <h3 id="resolving-other-columns">Resolving Other Columns</h3>
             <p>You can resolve other columns by appending their name to the resolution string. If left off it assumes you want <tt>id</tt></p>
