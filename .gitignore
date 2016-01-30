@@ -30,3 +30,4 @@ node_modules
 README.html
 .vagrant
 sqlite-integration-spec.db
+.npmrc
