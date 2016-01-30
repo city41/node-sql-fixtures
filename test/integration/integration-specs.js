@@ -148,11 +148,11 @@ module.exports = function(dbConfig) {
           })
           .catch(function (err) {
             done();
-          })
+          });
       });
 
       it('should fail early if FK lookup finds multiple rows', function(done) {
-        this.dataConfig['has_foreign_key'][0]['simple_table_id']['where'] = {string_column: 'non-unique row'};
+        this.dataConfig.has_foreign_key[0].simple_table_id.where = {string_column: 'non-unique row'};
 
         this.fixtureGenerator.create(this.dataConfig)
           .then(function (res) {
@@ -161,7 +161,7 @@ module.exports = function(dbConfig) {
           .catch(function (err) {
             expect(err.message).to.contain('>1 possible');
             done();
-          })
+          });
       });
     });
 
