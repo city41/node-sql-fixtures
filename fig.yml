@@ -1,15 +1,3 @@
-node:
-  build: .
-  volumes:
-   - ./test:/sql-fixtures/test
-   - ./lib:/sql-fixtures/lib
-   - ./gulpfile.js:/sql-fixtures/gulpfile.js
-  command: sh -c "sleep 15 && gulp test"
-  links:
-   - pg
-   - mysql
-   - maria
-
 pg:
   image: postgres:9.4
   environment:
