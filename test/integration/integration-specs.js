@@ -66,7 +66,7 @@ module.exports = function(dbConfig) {
           table.integer('foreign_a_id');
           table.integer('foreign_b_id');
           table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
-        })
+        });
       })
       .then(function() {
         done();
@@ -602,6 +602,38 @@ module.exports = function(dbConfig) {
       });
     });
 
+    describe('errors', function(done) {
+      it('should reject the promise if knex fails', function(done) {
+        var dataConfig = {
+          non_existant_table: {
+            foo: 'bar'
+          }
+        };
+
+        this.fixtureGenerator.create(dataConfig).then(function(result) {
+          done(new Error('should not have succeeded'));
+        }, function(err) {
+          expect(err).to.exist;
+          expect(err.toString()).to.contain('non_existant');
+          done();
+        });
+      });
+
+      it('should call the callback with an error if knex fails', function(done) {
+        var dataConfig = {
+          non_existant_table: {
+            foo: 'bar'
+          }
+        };
+
+        this.fixtureGenerator.create(dataConfig, function(err, result) {
+          expect(err).to.exist;
+          expect(err.toString()).to.contain('non_existant');
+          done();
+        });
+      });
+    });
+
     describe('calling the callback', function() {
       it('should call the callback if provided', function(done) {
         var dataConfig = {
@@ -611,7 +643,7 @@ module.exports = function(dbConfig) {
         };
 
         this.fixtureGenerator.create(dataConfig, function(err, results) {
-          expect(err).to.be.undefined;
+          expect(err).to.not.exist;
           expect(results.simple_table[0].string_column).to.eql('a value');
           done();
         });
@@ -632,7 +664,7 @@ module.exports = function(dbConfig) {
         };
 
         fixtureGenerator.create(dataConfig, function(err, results) {
-          expect(err).to.be.undefined;
+          expect(err).to.not.exist;
           expect(results.simple_table[0].string_column).to.eql('a value');
 
           myKnex.destroy().nodeify(done);
@@ -651,12 +683,12 @@ module.exports = function(dbConfig) {
         var fixtureGenerator = this.fixtureGenerator;
 
         fixtureGenerator.create(dataConfig, function(err, results) {
-          expect(err).to.be.undefined;
+          expect(err).to.not.exist;
           expect(results.simple_table[0].string_column).to.eql('a value');
 
           fixtureGenerator.destroy(function() {
             fixtureGenerator.create(dataConfig, function(err, results) {
-              expect(err).to.be.undefined;
+              expect(err).to.not.exist;
               expect(results.simple_table[0].string_column).to.eql('a value');
               done();
             });

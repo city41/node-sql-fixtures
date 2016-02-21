@@ -23,24 +23,12 @@ describe('fixtureGenerator', function() {
     };
 
     it('should reject invalid database config', function(done) {
-      fixtureGenerator.create({}, impossible, function(err, result) {})
+      fixtureGenerator.create({}, impossible)
         .catch(function(err) {
           expect(err).to.be.an.instanceOf(Error);
           expect(err.toString()).to.contain('DontExist');
           done();
         });
-    });
-
-    it('should return the error in the callback', function(done) {
-      fixtureGenerator.create(dbConfig, impossible, function(err, result) {
-        expect(err).to.be.an.instanceOf(Error);
-        expect(err.toString()).to.contain('DontExist');
-        expect(result).to.be.undefined;
-        done();
-      })
-      // it also rejects the promise, so swallowing that here to avoid the
-      // "unhandledReject" output. Promise is tested in test above.
-      .catch(_.noop);
     });
 
     it('should reject the promise', function(done) {
