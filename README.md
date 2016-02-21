@@ -60,10 +60,3 @@ Please fork and send pull requests in the typical fashion.
 There are both unit and integration tests. The unit tests are invoked with `gulp test:unit`.
 
 Checkout integration_tests.md for the scoop on the integration tests.
-
-# Road to 1.0.0
-
-These things remain to accomplish "one point oh"
-
-* better error reporting when a dependency can't be resolved
-* MySQL, Maria and SQLite can fail in some unusual scenarios due to the way they do inserts. Finding a solid fix for this would be good. So far the fixes just minimize the number of broken use cases, but there are is still at least one broken scenario lurking.
