@@ -163,6 +163,26 @@ module.exports = function(dbConfig) {
             done();
           });
       });
+
+      it('should allow getting a column other than id from existing data', function(done) {
+        var knex = this.knex;
+
+        var wantedData = 'unique row';
+        var dataConfig = {
+          has_foreign_key: [{
+            string_column: {from: 'simple_table', column: 'string_column', where: { string_column: wantedData }},
+            simple_table_id: {from: 'simple_table', where: { string_column: wantedData }}
+          }]
+        };
+
+        this.fixtureGenerator.create(dataConfig).then(function(fixtures) {
+          expect(fixtures.has_foreign_key[0].string_column).to.equal('unique row');
+          done();
+        })
+        .catch(function (err) {
+          done(err);
+        });
+      });
     });
 
     describe("generating fixtures", function() {
