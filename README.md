@@ -55,6 +55,8 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 Are available at the [sql-fixtures website](http://city41.github.io/node-sql-fixtures)
 
 # Contributing
+**NOTE:** I am hesitant to add more features at this point. I feel sql-fixtures is feature complete now and I want to keep it a small, focused module. If you have an idea for a feature you want to implement, please contact me first.
+
 Please fork and send pull requests in the typical fashion.
 
 There are both unit and integration tests. The unit tests are invoked with `gulp test:unit`.
