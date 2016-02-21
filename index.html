@@ -166,6 +166,16 @@ sqlFixtures.create(dbConfig, dataSpec, function(err, result) {
 };</pre>
 
             <p>Both of the above users will have their username set to "bob"</p>
+            <p>As of version 1.0.0, you can resolve other columns from existing data: </p>
+
+<pre>var dataSpec = {
+  items: {
+    name: {from: 'users', column: 'middle_name', where: {'name': 'Bob'}}
+  }
+};
+</pre>
+
+            <p>In the above, a query for Bob's middle name will be performed, then set as the item's name.</p>
 
             <h3 id="resolving-using-spec-ids">Resolving Using Spec IDs</h3>
             <p>If you are generating a lot of data, indices can get tedious. You can use a specId instead.</p>
