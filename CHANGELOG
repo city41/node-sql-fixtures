@@ -1,3 +1,9 @@
+1.0.0 - Feb 21, 2016
+-- sqlite now uses rowids to avoid "achilles heel" problem
+-- fixed bug where people using callbacks would not be informed of errors
+-- populating from existing data now allows specifying column_name
+-- bumped to 1.0.0 due to deciding this module is feature complete and stable
+
 0.13.0 - Feb 9, 2016
 -- Upgraded all dependent modules
 
