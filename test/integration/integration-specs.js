@@ -31,39 +31,45 @@ module.exports = function(dbConfig) {
         knex.schema.dropTableIfExists('has_no_id_column')
       ];
 
-      bluebird.all(dropPromises).then(function() {
-        knex.schema.createTable('simple_table', function(table) {
+      bluebird.all(dropPromises)
+      .then(function() {
+        return knex.schema.createTable('simple_table', function(table) {
           table.increments('id').primary();
           table.string('string_column');
           table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
-        }).then(function() {
-          knex.schema.createTable('has_foreign_key', function(table) {
-            table.increments('id').primary();
-            table.string('string_column');
-            table.integer('simple_table_id');
-          }).then(function() {
-            knex.schema.createTable('has_foreign_key_to_itself', function(table) {
-              table.increments('id').primary();
-              table.string('string_column');
-              table.integer('parent_id');
-            }).then(function() {
-              knex.schema.createTable('has_two_foreign_keys', function(table) {
-                table.increments('id').primary();
-                table.integer('has_foreign_key_to_itself_id');
-                table.integer('simple_table_id');
-                table.string('string_column');
-              }).then(function() {
-                knex.schema.createTable('has_no_id_column', function(table) {
-                  table.integer('foreign_a_id');
-                  table.integer('foreign_b_id');
-                  table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
-                }).then(function() {
-                  done();
-                });
-              });
-            });
-          });
         });
+      })
+      .then(function() {
+        return knex.schema.createTable('has_foreign_key', function(table) {
+          table.increments('id').primary();
+          table.string('string_column');
+          table.integer('simple_table_id');
+        });
+      })
+      .then(function() {
+        return knex.schema.createTable('has_foreign_key_to_itself', function(table) {
+          table.increments('id').primary();
+          table.string('string_column');
+          table.integer('parent_id');
+        });
+      })
+      .then(function() {
+        return knex.schema.createTable('has_two_foreign_keys', function(table) {
+          table.increments('id').primary();
+          table.integer('has_foreign_key_to_itself_id');
+          table.integer('simple_table_id');
+          table.string('string_column');
+        });
+      })
+      .then(function() {
+        return knex.schema.createTable('has_no_id_column', function(table) {
+          table.integer('foreign_a_id');
+          table.integer('foreign_b_id');
+          table.string('auto_populated_column').notNullable().defaultTo('autopopulated');
+        })
+      })
+      .then(function() {
+        done();
       });
     });
 
