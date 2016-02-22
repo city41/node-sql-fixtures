@@ -290,10 +290,11 @@ fixtureCreator.create(dataSpec, callback);</pre>
 
           <h3 id="no-primary-key-warning">No Primary Key Warning</h3>
           <p>
-            If you are using <b>MySQL</b>, <b>Maria</b> or <b>SQLite</b> and you want to insert records
+            If you are using <b>MySQL</b>, <b>Maria</b> or <b>SQLite with "<tt>without rowids</tt> on your tables"</b> and you want to insert records
             using sql-fixtures on a table that lacks a primary key, you may get unexpected results. Postgres
             does not have this limitation.
           </p>
+          <p><B>SQLite note: </b><i>SQLite only has this limitation if you created your tables without rowids. If you don't know what rowids are, then you don't have this limitation.</i></p>
           <p>This is due to how these databases perform inserts. After an insert, sql-fixtures needs to then retrieve the
             entire inserted row from the database. This is so data that is needed to resolve other dependencies in fixtures can be obtained.
           </p>
