@@ -1,0 +1,29 @@
+version: '3'
+services:
+  pg:
+    image: postgres:9.4
+    environment:
+     - POSTGRES_USER=testdb
+     - POSTGRES_PASSWORD=password
+    ports:
+     - "15432:5432"
+
+  mysql:
+    image: mysql:5.7.7
+    environment:
+     - MYSQL_ROOT_PASSWORD=password
+     - MYSQL_USER=testdb
+     - MYSQL_PASSWORD=password
+     - MYSQL_DATABASE=testdb
+    ports:
+     - "13306:3306"
+
+  maria:
+    image: mariadb:10.1.2
+    environment:
+     - MYSQL_ROOT_PASSWORD=password
+     - MYSQL_USER=testdb
+     - MYSQL_PASSWORD=password
+     - MYSQL_DATABASE=testdb
+    ports:
+     - "13307:3306"

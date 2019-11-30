@@ -50,5 +50,5 @@ gulp.task('test:integration', gulp.series(
 gulp.task('test', gulp.series(
   'lint',
   'test:unit',
-  'test:integration'
+  'test:integration:sqlite'
 ));

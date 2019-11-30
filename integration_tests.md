@@ -14,9 +14,8 @@ sqlite is your friend, `gulp test:integration:sqlite` is a quick easy way to run
 
 Docker containers provide the database engines. Getting these running is not too bad, but will take a while the first time.
 
-1. [Install Fig](http://www.fig.sh/install.html) -- these instructions also show how to install Docker, which you will also need.
-  * If you are on OSX, run `$(boot2docker shellinit)` to get your shell set up to talk with the Docker VM
-1. from the root of sql-fixtures, run `fig up -d`
+1. [Install docker-compose](https://docs.docker.com/compose/install/) -- these instructions also show how to install Docker, which you will also need.
+1. from the root of sql-fixtures, run `docker-compose up -d`
   * go get some coffee, this will take a long time the first time
 
 

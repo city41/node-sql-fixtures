@@ -19,6 +19,8 @@ describe("postgres intregation tests", function() {
   // postgres specific specs below
 
   describe("array data type", function() {
+    this.timeout(6000);
+
     before(function() {
       this.fixtureGenerator = new FixtureGenerator(dbConfig);
       this.knex = this.fixtureGenerator.knex;

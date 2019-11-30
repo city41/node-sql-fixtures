@@ -23,7 +23,7 @@ describe('fixtureGenerator', function() {
     };
 
     it('should reject invalid database config', function(done) {
-      fixtureGenerator.create({}, impossible)
+      fixtureGenerator.create({ client: 'sqlite3' }, impossible)
         .catch(function(err) {
           expect(err).to.be.an.instanceOf(Error);
           expect(err.toString()).to.contain('DontExist');
