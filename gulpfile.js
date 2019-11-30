@@ -18,9 +18,9 @@ gulp.task('lint', function() {
    .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('test:unit', ['lint'], function() {
+gulp.task('test:unit', gulp.series('lint', function() {
   return runSpecs('./test/unit/*.js');
-});
+}));
 
 gulp.task('test:integration:postgres', function() {
   return runSpecs('./test/integration/postgres*.js');
@@ -36,19 +36,19 @@ gulp.task('test:integration:maria', function() {
 
 gulp.task('delete:sqlite', shell.task(['rm -f ./sqlite-integration-spec.db']));
 
-gulp.task('test:integration:sqlite', ['delete:sqlite'], function() {
+gulp.task('test:integration:sqlite', gulp.series('delete:sqlite', function() {
   return runSpecs('./test/integration/sqlite*.js');
-});
+}));
 
-gulp.task('test:integration', [
+gulp.task('test:integration', gulp.series(
   'test:integration:sqlite',
   'test:integration:postgres',
   'test:integration:mysql',
   'test:integration:maria'
-])
+))
 
-gulp.task('test', [
+gulp.task('test', gulp.series(
   'lint',
   'test:unit',
   'test:integration'
-]);
+));
