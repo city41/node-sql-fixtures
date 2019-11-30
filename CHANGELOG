@@ -1,3 +1,7 @@
+1.0.1 - Nov 30, 2019
+-- updated all dependencies to resolve known vulnerabilities
+-- changed from fig to docker-compose for integration tests
+
 1.0.0 - Feb 21, 2016
 -- sqlite now uses rowids to avoid "achilles heel" problem
 -- fixed bug where people using callbacks would not be informed of errors
