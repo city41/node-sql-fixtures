@@ -34,13 +34,13 @@ DOCKER_IP=<DOCKER_IP> DOCKER_PORT=13307 gulp test:integration:maria
 
 ## Cleaning things up
 
-To clean up the containers Fig is managing: `fig stop && fig rm`
+To clean up the containers docker-compose is managing: `docker-compose stop && docker-compose rm`
 
 To clean up all Docker containers: `docker rm $(docker ps -q -a)`
 
 ## Debugging with node-inspector
 
-1. fig up -d
+1. docker-compose up -d
 1. `node-inspector`
 1. `DOCKER_IP=<host ip> DOCKER_PORT=<port> node --debug-brk $(which gulp) test:integration:<postgres, mysql or maria>`
   * see above section for database specific values
