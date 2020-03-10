@@ -1,3 +1,6 @@
+1.0.2 - March 9, 2020
+-- Fix to destroy() to enable using latest version of Knex (thanks woyuen)
+
 1.0.1 - Nov 30, 2019
 -- updated all dependencies to resolve known vulnerabilities
 -- changed from fig to docker-compose for integration tests
