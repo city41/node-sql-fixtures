@@ -667,7 +667,7 @@ module.exports = function(dbConfig) {
           expect(err).to.not.exist;
           expect(results.simple_table[0].string_column).to.eql('a value');
 
-          myKnex.destroy().nodeify(done);
+          bluebird.resolve().then(function(){ return myKnex.destroy(); }).nodeify(done);
         });
       });
     });
