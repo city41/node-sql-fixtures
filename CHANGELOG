@@ -1,3 +1,6 @@
+1.0.4 - Aug 3, 2020
+-- Upgrade Lodash to avoid CVE-2020-8203
+
 1.0.3 - Aug 3, 2020
 -- Don't fail if the passed in data spec is empty (ie, a noop)
 

@@ -31,7 +31,7 @@
   "dependencies": {
     "bluebird": "3.2.2",
     "knex": "^0.20.3",
-    "lodash": "^4.17.12"
+    "lodash": "^4.17.19"
   },
   "repository": {
     "type": "git",
