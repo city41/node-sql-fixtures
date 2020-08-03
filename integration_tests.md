@@ -36,7 +36,7 @@ DOCKER_IP=<DOCKER_IP> DOCKER_PORT=13307 gulp test:integration:maria
 
 To clean up the containers docker-compose is managing: `docker-compose stop && docker-compose rm`
 
-To clean up all Docker containers: `docker rm $(docker ps -q -a)`
+To clean up all Docker containers: `docker rm $(docker ps -q -a)` you may need to add `-f` flag to force the clean up if some containers are still running.
 
 ## Debugging with node-inspector
 
