@@ -775,6 +775,42 @@ module.exports = function (dbConfig) {
           });
         });
       });
+
+      // this is from a bug report here:
+      // https://github.com/city41/node-sql-fixtures/issues/48
+      //
+      // note that the bug report involves a self relation, so that is why this test
+      // is using has_foreign_key_to_itself, this bug almost certainly repros in
+      // just about any scenario though
+      it("should enable consecutive runs of the same spec when unique is true", function(done) {
+        var dataConfig = {
+          has_foreign_key_to_itself: [
+            {
+              string_column: "parent value",
+            },
+            {
+              string_column: "child value",
+              parent_id: "has_foreign_key_to_itself:0"
+            },
+          ],
+        };
+
+        var fg = this.fixtureGenerator;
+
+        fg.create(dataConfig, { unique: true }, function(err, results) {
+          expect(err).to.not.exist;
+          expect(results.has_foreign_key_to_itself[0].string_column).to.eql("parent value");
+          expect(results.has_foreign_key_to_itself[1].string_column).to.eql("child value");
+          expect(results.has_foreign_key_to_itself[1].parent_id).to.eql(
+            results.has_foreign_key_to_itself[0].id
+          );
+
+          fg.create(dataConfig, { unique: true }, function(err, results) {
+            expect(err).to.not.exist;
+            done();
+          });
+        });
+      });
     });
 
     describe("errors", function (done) {
