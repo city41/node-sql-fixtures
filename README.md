@@ -7,10 +7,6 @@ This module is now archived and no longer being updated
 
 Easily generate data that gets saved in the database, with foreign key dependencies automatically resolved. Ideal for integration tests and generating dummy data. Uses [knex](http://knexjs.org) internally.
 
-# dormant but stable
-
-sql-fixtures is not actively being worked on anymore, because it's pretty much done. I will still support it if any issues arise.
-
 # Supported Databases
 
 | Database  | Works?   | As of version | Integration Tests? | Usage                                      |
